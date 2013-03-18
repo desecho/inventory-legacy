@@ -24,7 +24,7 @@ You can create boxes of type 5 and 6 by using administration panel.
 
 ##Installation instructions
 
-* Change the following variables in settings.py. You'll need an API key. You can obtain it here - http://api.themoviedb.org. Make sure that the user running the server has access to write to /cache/tmdb3.cache. You can generate SECRET_KEY using [Django Secret Key Generator](http://www.miniwebtool.com/django-secret-key-generator/). Insert your path to django admin static directory to STATICFILES_DIRS. It should be like something like '/usr/local/lib/python2.7/dist-packages/django/contrib/admin/static'
+* Change the following variables in settings.py. You can generate SECRET_KEY using [Django Secret Key Generator](http://www.miniwebtool.com/django-secret-key-generator/). Insert your path to django admin static directory to STATICFILES_DIRS. It should be like something like '/usr/local/lib/python2.7/dist-packages/django/contrib/admin/static'.
     * DATABASES
     * SECRET_KEY
     * BASE_PATH
