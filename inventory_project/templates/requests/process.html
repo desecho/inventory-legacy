@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script src="/static/libs/jquery-validation-plugin/jquery.validate.min.js"></script>
+<script src="/static/libs/jquery-validation-plugin/validate.messages_ru.js"></script>
+
+<link rel="stylesheet" href="/static/libs/select2/select2.css"/>
+<script src="/static/libs/select2/select2.js"></script>
+<script src="/static/libs/select2/select2_locale_ru.js"></script>
+
+<script src="/static/js/request_process.js"></script>
+<script src="/static/js/request.js"></script>
+<script>
+  var item_names_in_boxes = jQuery.parseJSON('{{ item_names_in_boxes|safe }}')
+  var boxes = jQuery.parseJSON('{{ boxes|safe }}');
+  var request_type = {{ request_type.pk }};
+
+  var packet_items = jQuery.parseJSON('{{ packet_items|safe }}');
+  var person_id = {{ person.pk }};
+  var packet_id = {{ packet_id }};
+</script>
+<h1 class="text-center">Обработка заявки</h1>
+<dl class="dl-horizontal">
+  <dt>Тип Заявки</dt>
+  <dd>{{ request_type.name }}</dd>
+  <dt>Лицо</dt>
+  <dd>{{ person.name }}</dd>
+</dl>
+<form enctype="multipart/form-data" action="" method="POST" id="request">
+    {% csrf_token %}
+    <br>
+    <p><a id="add_item" href="#" onclick="add_item()"><i class="icon-plus-sign"></i></a></p>
+    <div class="control-group">
+      <div class="controls">
+        <input type="button" value="Обработать" onclick="process_request()" class="btn btn-primary">
+        <input type="button" value="Проверить" onclick="check_form()" class="btn">
+        <input type="button" value="Сохранить" onclick="save_request()" class="btn">
+        <input type="button" value="Удалить" onclick="delete_request()" class="btn">
+      </div>
+    </div>
+    <input type="hidden" id="delete" name="delete" value="0"/>
+</form>
+
+{% endblock %}

@@ -1,0 +1,3 @@
+insert  into `inventory_box`(`id`,`name`,`box_type_id`,`deleted`) values (1,'Склад',4,0),(2,'Расход',2,0),(3,'Приход',1,0),(4,'Инвентаризация',3,0);
+insert  into `inventory_boxtype`(`id`,`name`) values (3,'Инвентаризация'),(5,'Лицо'),(1,'Приход'),(2,'Расход'),(4,'Склад'),(6,'Узел');
+insert  into `inventory_requesttype`(`id`,`name`) values (1,'Выписка со склада / Снятие с узла'),(2,'Списание в расход / Установка на узел');

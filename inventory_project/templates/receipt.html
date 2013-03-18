@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load bootstrap_toolkit %}
+
+{% block content %}
+
+<script>
+    $(function() {
+      var item_data = jQuery.parseJSON('{{ items|safe }}')
+        $("#id_item").autocomplete({
+          source: item_data,
+        });
+  });
+</script>
+<h1 class="text-center">Оформить приход на Склад</h1>
+<form enctype="multipart/form-data" action="" method="POST" id="receipt" class="form-horizontal">
+  {% csrf_token %}
+  {{ form|as_bootstrap }}
+  <div class="control-group">
+    <div class="controls">
+      <input type="submit" value="Оформить" class="btn btn-primary">
+    </div>
+  </div>
+</form> 
+
+{% endblock %}

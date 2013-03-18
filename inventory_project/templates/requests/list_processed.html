@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load bootstrap_toolkit %}
+{% block content %}
+<script src="/static/libs/date.js"></script>
+<script>
+  function reset_form() {
+    $('#id_person').val('');
+    $('#id_date_from').val('{{ date_initial.0 }}');
+    $('#id_date_to').val('{{ date_initial.1 }}');
+  }
+</script>
+<h1 class="text-center">Обработанные заявки</h1>
+<form enctype="multipart/form-data" action="" method="POST" id="processed_requests" class="form-horizontal">
+  {% csrf_token %}
+  {{ form|as_bootstrap }}
+  <div class="control-group">
+    <div class="controls">
+        <input type="submit" value="Сформировать" class="btn btn-primary">
+        <input type="button" value="Сбросить" onclick="reset_form()" class="btn">
+    </div>
+  </div>
+</form>
+
+{% if items %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Дата</th>
+        <th>Откуда</th>
+        <th>Наименование</th>
+        <th>Количество</th>
+        <th>Комментарий</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in items %}
+      <tr>
+          <td>{{ item.date }}</td>
+          <td>{{ item.item.box.name }}</td>
+          <td>{{ item.item.item.name }}</td>
+          <td>{{ item.item.quantity}}</td>
+          <td>{% if item.item.comment %} {{ item.item.comment }} {% endif %}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+  </table>
+{% endif %}
+
+{% endblock %}

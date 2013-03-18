@@ -1,0 +1,60 @@
+.content {
+    margin: 40px 10px 0 10px;
+}
+
+/* Select2 fixes START */
+.item-select {
+    width: 220px;
+}
+
+.select2-container .select2-choice {
+    height: 28px !important;
+    background: none;
+}
+
+.select2-container {
+    margin: 0 0 10px 4px;
+}
+
+/* Select2 fixes END */
+
+.login-panel {
+    float: right;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.home-panel {
+    float: left;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+label.error {
+    color: #b94a48;
+    margin: 0;
+    display: inline;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.bank-data {
+    float: left;
+    width: 300px;
+}
+
+.page-break  {
+    display: none;
+}
+
+.to-print {
+    visibility: hidden;
+}

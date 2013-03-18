@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% load bootstrap_toolkit %}
+
+{% block content %}
+
+<script>
+  function reset_form() {
+    $('#id_item').val('0');
+    $('#id_location').val('0');
+    $('#id_person').val('0');
+  }
+</script>
+<h1 class="text-center">Отчёт о наличие</h1>
+<form enctype="multipart/form-data" action="" method="POST" id="receipt" class="form-horizontal">
+  {% csrf_token %}
+  {{ form|as_bootstrap }}
+  <div class="control-group">
+    <div class="controls">
+        <input type="submit" value="Сформировать" class="btn btn-primary"> 
+        <input type="button" value="Сбросить" onclick="reset_form()" class="btn">
+    </div>
+  </div> 
+</form>
+ 
+{% if inventory %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Коробка</th>
+      <th>Наименование</th>
+      <th>Количество</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for item in inventory %}
+    <tr>
+        <td>{{ item.box }}</td>
+        <td>{{ item.item }}</td>
+        <td>{{ item.quantity }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

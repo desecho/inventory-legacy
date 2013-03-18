@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block home_panel %}{% endblock %}
+{% block content %}
+
+{% if perms.admin %}
+    <h3>Администрирование</h3>
+    <a href="/receipt/">Оформить Приход на Склад</a><br>
+    <a href="/requests/list">Необработанные заявки</a><br>
+    <a href="/stocktaking/list">Инвентаризация</a>
+{% endif %}
+
+<h3>Заявки</h3>
+
+<a href="/requests/add/receipt">Добавить заявку - Выписка со Cклада / Снятие с Узла</a><br>
+<a href="/requests/add/expense">Добавить заявку - Списание в Расход / Установка на Узел</a><br>
+<a href="/requests/list-processed">Обработанные заявки</a>
+<br><br>
+
+<h3>Отчеты</h3>
+<a href="/reports/inventory">Отчёт о наличие</a><br>
+<a href="/reports/inventory-storage">Отчёт о наличие необходимого оборудования на Складе</a><br>
+<a href="/reports/movements">Отчёт о перемещениях</a>
+<br><br>
+
+{% endblock %}

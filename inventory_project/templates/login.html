@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block home_panel %}{% endblock %}
+{% block login_panel %}{% endblock %}
+{% block content %}
+
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="form-horizontal">
+  {% csrf_token %}
+  <div class="control-group">
+      <label class="control-label" for="username">{{ form.username.label_tag }}</label>
+      <div class="controls">
+        <input type="text" name="username" required {% if form.username.value %} value="{{ form.username.value}}" {% endif %} autofocus>
+      </div>
+  </div>
+  <div class="control-group">
+      <label class="control-label" for="password">{{ form.password.label_tag }}</label>
+      <div class="controls">
+        <input type="password" name="password" required {% if form.password.value %} value="{{ form.password.value}}" {% endif %}>
+      </div> 
+  </div>
+  {% if form.errors %}
+    <div class="control-group">
+      <div class="controls">
+        <span class="text-error">Вы ввели неправильный логин/пароль.</span>
+      </div>
+    </div>
+  {% endif %}
+  <div class="control-group">
+    <div class="controls">
+      <input type="submit" class="btn btn-primary" value="Войти">
+    </div>
+  </div>
+  <input type="hidden" name="next" value="{{ next }}">
+</form>
+
+{% endblock %}

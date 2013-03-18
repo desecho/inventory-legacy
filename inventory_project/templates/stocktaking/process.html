@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script src="/static/libs/jquery-validation-plugin/jquery.validate.min.js"></script>
+<script src="/static/libs/jquery-validation-plugin/validate.messages_ru.js"></script>
+
+<script src="/static/js/stocktaking.js"></script>
+<script>
+  var item_names = jQuery.parseJSON('{{ item_names|safe }}')
+  var items = jQuery.parseJSON('{{ items|safe }}');
+</script>
+<h1 class="text-center">Инвентаризация</h1>
+
+<h3>{{ box }}</h3>
+
+<form enctype="multipart/form-data" action="" method="POST" id="stocktaking">
+    {% csrf_token %}
+    <input type="hidden" id="item_data" name="item_data" />
+    <p><a id="add_item" href="#" onclick="add_item()"><i class="icon-plus-sign"></i></a></p>
+    <div class="control-group">
+      <div class="controls">
+        <input type="button" value="Провести" onclick="process()" class="btn btn-primary">
+        <input type="button" value="Проверить" onclick="check_form()" class="btn">
+      </div>
+    </div>
+</form>
+
+{% endblock %}

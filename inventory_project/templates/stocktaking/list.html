@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="text-center">Инвентаризация</h1> 
+
+{% for box in boxes %}
+<a href="/stocktaking/process/{{ box.pk }}">{{ box.name }}</a><br>
+{% endfor %}
+ 
+{% endblock %}

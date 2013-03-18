@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load bootstrap_toolkit %}
+
+{% block content %}
+<script src="/static/libs/date.js"></script>
+<script>
+  function reset_form() {
+    $('#id_item').val('0');
+    $('#id_box_from').val('0');
+    $('#id_box_to').val('0');
+    $('#id_box').val('0');
+    $('#id_date_from').val('{{ date_initial.0 }}');
+    $('#id_date_to').val('{{ date_initial.1 }}');
+  }
+</script>
+<h1 class="text-center">Отчёт о перемещениях</h1>
+<form enctype="multipart/form-data" action="" method="POST" id="receipt" class="form-horizontal">
+  {% csrf_token %}
+  {{ form|as_bootstrap }}
+  <div class="control-group">
+    <div class="controls">
+        <input type="submit" value="Сформировать" class="btn btn-primary">
+        <input type="button" value="Сбросить" onclick="reset_form()" class="btn">
+    </div>
+  </div>
+</form>
+
+{% if movements %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Откуда</th>
+      <th>Куда</th>
+      <th>Наименование</th>
+      <th>Количество</th>
+      <th>Дата</th>
+      <th>Комментарий</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for movement in movements %}
+    <tr>
+        <td>{{ movement.box_from }}</td>
+        <td>{{ movement.box_to }}</td>
+        <td>{{ movement.item }}</td>
+        <td>{{ movement.quantity }}</td>
+        <td>{{ movement.date }}</td>
+        <td>{% if movement.comment %} {{ movement.comment }} {% endif %}</td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
+
+{% endif %}
+
+{% endblock %}

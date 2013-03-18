@@ -1,0 +1,17 @@
+body * {
+	visibility: hidden;
+}
+
+#to-print, #to-print * {
+	visibility: visible;
+}
+
+#to-print {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.page-break  {
+    display: block; page-break-before: always;
+}
