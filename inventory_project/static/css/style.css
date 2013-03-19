@@ -1,3 +1,12 @@
+#loading {
+    background-image: url('../img/loading.gif');
+    display: none;
+    height: 48px;
+    position: absolute;
+    right: 0;
+    width: 48px;
+}
+
 .content {
     margin: 40px 10px 0 10px;
 }
@@ -8,8 +17,8 @@
 }
 
 .select2-container .select2-choice {
-    height: 28px !important;
     background: none;
+    height: 28px !important;
 }
 
 .select2-container {
@@ -34,8 +43,8 @@
 
 label.error {
     color: #b94a48;
-    margin: 0;
     display: inline;
+    margin: 0;
 }
 
 .bold {

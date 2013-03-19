@@ -1,13 +1,14 @@
 # -*- coding: utf8 -*-
 import json
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import redirect
 from inventory.models import (Item, Box, InventoryItem, Movement, Packet,
                               PacketItem, Request, RequestType)
-from inventory.forms import (ReceiptForm, InventoryReportForm, MovementsReportForm,
-                             RequestAddForm, RequestsListProcessedForm, Choices, date_initial)
+from inventory.forms import (ReceiptForm, InventoryReportForm,
+                             MovementsReportForm, RequestAddForm,
+                             RequestsListProcessedForm, Choices,
+                             date_initial)
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, permission_required
-from django.template import RequestContext
 from django.conf import settings
 from annoying.decorators import ajax_request, render_to
 
@@ -84,7 +85,10 @@ def receipt(request):
                   form.cleaned_data['comment'])
         message = 'Оформлено'
         form = ReceiptForm()
-    return {'form': form, 'items': get_item_names_json(), 'message': message, 'message_status': 1}
+    return {'form': form,
+            'items': get_item_names_json(),
+            'message': message,
+            'message_status': 1}
 
 
 @render_to('reports/inventory.html')
@@ -163,7 +167,9 @@ def reports_movements(request):
                                        'box_from__name', 'box_to__name',
                                        'item__name')
     # date_initial variable because it's more convinient for js form reset
-    return {'form': form, 'movements': movements, 'date_initial': get_date_initial()}
+    return {'form': form,
+            'movements': movements,
+            'date_initial': get_date_initial()}
 
 
 class RequestData:
@@ -338,7 +344,9 @@ def ajax_create_or_update_packet(request):
 @permission_required(generic_permission)
 @login_required
 def requests_list(request, message=None, message_status=None):
-    return {'requests': Request.objects.filter(processed=0), 'message': message, 'message_status': message_status}
+    return {'requests': Request.objects.filter(processed=0),
+            'message': message,
+            'message_status': message_status}
 
 @render_to('requests/process.html')
 @permission_required(generic_permission)

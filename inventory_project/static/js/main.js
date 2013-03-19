@@ -85,13 +85,3 @@ function array2json(arr) {
     if(is_list) return '[' + json + ']';//Return numerical JSON
     return '{' + json + '}';//Return associative JSON
 }
-
-// $(function() {
-//     $('.loading').ajaxStart(function(){
-//         $(this).show();
-//     });
-
-//     $('.loading').ajaxStop(function(){
-//         $(this).hide();
-//     });
-// });

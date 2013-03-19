@@ -6,6 +6,7 @@ from inventory.models import Item, Box, Request, InventoryItem
 
 date_initial = (date.today() - timedelta(days=30), date.today())
 
+
 class Choices:
     def __init__(self, hide_deleted=True):
         self.hide_deleted = hide_deleted
@@ -67,7 +68,7 @@ class Choices:
 
 class RequestAddForm(forms.ModelForm):
     person = forms.ChoiceField(label='Лицо',
-                             choices=Choices().persons_with_no_default_value)
+                               choices=Choices().persons_with_no_default_value)
 
     class Meta:
         model = Request
@@ -112,7 +113,8 @@ class InventoryReportForm(forms.Form):
     choices = Choices()
     item = forms.ChoiceField(label='Наименование', choices=choices.output_items(), required=False)
     person = forms.ChoiceField(label='Лицо', choices=choices.output_persons(), required=False)
-    location = forms.ChoiceField(label='Узел', choices=choices.output_storage_with_locations(), required=False)
+    location = forms.ChoiceField(label='Узел',
+                                 choices=choices.output_storage_with_locations(), required=False)
 
     def clean_item(self):
         if not int(self.cleaned_data['item']):
@@ -137,7 +139,11 @@ def create_form_date_field(date_type):
     else:
         label = 'До'
         initial_date = date_initial[1]
-    return forms.DateField(label=label, initial=initial_date, widget=forms.DateInput(attrs={'required': '', 'pattern': '^\d{2}\.\d{2}\.\d{4}$'}, format=settings.FORMAT_DATE), input_formats=(settings.FORMAT_DATE,))
+    widget_attrs = {'required': '', 'pattern': '^\d{2}\.\d{2}\.\d{4}$'}
+    return forms.DateField(label=label,
+                           initial=initial_date,
+                           widget=forms.DateInput(attrs=widget_attrs, format=settings.FORMAT_DATE),
+                           input_formats=(settings.FORMAT_DATE,))
 
 
 class MovementsReportForm(forms.Form):
@@ -172,8 +178,8 @@ class MovementsReportForm(forms.Form):
 
 class RequestsListProcessedForm(forms.Form):
     person = forms.ChoiceField(label='Лицо',
-                             choices=Choices().persons_with_no_default_value,
-                             widget=forms.Select(attrs={'required': ''}))
+                               choices=Choices().persons_with_no_default_value,
+                               widget=forms.Select(attrs={'required': ''}))
     date_from = create_form_date_field('from')
     date_to = create_form_date_field('to')
 

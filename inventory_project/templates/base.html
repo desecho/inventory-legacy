@@ -22,6 +22,8 @@
 <meta charset="utf-8">
 <title>{% block title %}Inventory{% endblock %}</title>
 
+<div id="loading"></div>
+
 {% block home_panel %}
 <div class="home-panel">
 	<a href="/"><i class="icon-home"></i> Домой</a>
@@ -42,3 +44,5 @@
 	</script>
     {% block content %}{% endblock %}
 </div>
+
+<script src="/static/js/ajax_loading.js"></script>

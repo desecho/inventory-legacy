@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Item(models.Model):
     name = models.CharField('название', unique=True, max_length=255)
     minimal_quantity_in_storage = models.IntegerField(
@@ -67,7 +68,10 @@ class Movement(models.Model):
         verbose_name_plural = 'перемещения'
 
     def __unicode__(self):
-        return '"%s" -> "%s" - "%s" (%d)' % (self.box_from.name, self.box_to.name, self.item.name, self.quantity)
+        return '"%s" -> "%s" - "%s" (%d)' % (self.box_from.name,
+                                             self.box_to.name,
+                                             self.item.name,
+                                             self.quantity)
 
 
 class Packet(models.Model):
