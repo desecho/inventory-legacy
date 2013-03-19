@@ -1,12 +1,14 @@
 from django.conf.urls import patterns, include, url
+
+# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^$', 'inventory.views.home'),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     url(r'^logout/$', 'inventory.views.logout_view'),
-    url(r'^admin/', include(admin.site.urls)),
     url(r'^receipt/$', 'inventory.views.receipt'),
     url(r'^reports/inventory/$', 'inventory.views.reports_inventory'),
     url(r'^reports/inventory-storage/$', 'inventory.views.reports_inventory_storage'),
@@ -21,4 +23,10 @@ urlpatterns = patterns('',
     url(r'^requests/process/(?P<id>\d+)?$', 'inventory.views.requests_process'),
     url(r'^stocktaking/list/$', 'inventory.views.stocktaking_list'),
     url(r'^stocktaking/process/(?P<box_id>\d+)?$', 'inventory.views.stocktaking_process'),
+
+    # Uncomment the admin/doc line below to enable admin documentation:
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Uncomment the next line to enable the admin:
+    url(r'^admin/', include(admin.site.urls)),
 )
