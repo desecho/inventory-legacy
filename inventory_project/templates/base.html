@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/libs/jquery_ui_bootstrap/jquery-ui-1.10.0.custom.css" />
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+
 <link href="/static/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="/static/libs/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
 <script src="/static/libs/bootstrap/js/bootstrap.min.js"></script>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
+
 <link rel="stylesheet" href="/static/libs/messenger/messenger.css" />
 <link rel="stylesheet" href="/static/libs/messenger/messenger-theme-future.css" />
 <script src="/static/libs/messenger/messenger.min.js"></script>
@@ -29,12 +30,9 @@
 
 {% block login_panel %}
 <div class="login-panel">
-    <a href="/logout/"><i class="icon-road"></i>  Выход</a><br>
-    {% block additional_actions %}{% endblock %}
+    <a href="/logout/"><i class="icon-road"></i> Выход</a><br>
 </div>
 {% endblock %}
-
-
 
 <div class="content">
 	<script>

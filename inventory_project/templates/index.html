@@ -3,7 +3,7 @@
 {% block home_panel %}{% endblock %}
 {% block content %}
 
-{% if perms.admin %}
+{% if perms.inventory %}
     <h3>Администрирование</h3>
     <a href="/receipt/">Оформить Приход на Склад</a><br>
     <a href="/requests/list">Необработанные заявки</a><br>

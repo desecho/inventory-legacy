@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
 
 <script src="/static/libs/jquery-validation-plugin/jquery.validate.min.js"></script>
@@ -15,7 +14,6 @@
   var item_names_in_boxes = jQuery.parseJSON('{{ item_names_in_boxes|safe }}')
   var boxes = jQuery.parseJSON('{{ boxes|safe }}');
   var request_type = {{ request_type.pk }};
-
   var packet_items = jQuery.parseJSON('{{ packet_items|safe }}');
   var person_id = {{ person.pk }};
   var packet_id = {{ packet_id }};

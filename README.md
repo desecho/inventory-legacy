@@ -5,10 +5,10 @@ You can create boxes of type 5 and 6 by using administration panel.
 
 ##Required packages
 
-* [Python 2](http://www.python.org)
-* [Django 1.5](http://djangoproject.com)
-* [django-annoying](https://github.com/skorokithakis/django-annoying)
-* [django-bootstrap-toolkit](https://github.com/dyve/django-bootstrap-toolkit)
+* [Python v2.6.5+](http://www.python.org)
+* [Django v1.5](http://djangoproject.com)
+* [django-annoying v0.7.7+](https://github.com/skorokithakis/django-annoying)
+* [django-bootstrap-toolkit v2.8.0+](https://github.com/dyve/django-bootstrap-toolkit)
 
 ##Used Javascript libraries
 * [Bootstrap v2.3.1](http://twitter.github.com/bootstrap/)

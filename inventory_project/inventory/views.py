@@ -11,6 +11,8 @@ from django.template import RequestContext
 from django.conf import settings
 from annoying.decorators import ajax_request, render_to
 
+generic_permission = 'inventory.add_item'
+
 
 def logout_view(request):
     logout(request)
@@ -63,7 +65,7 @@ def move_item(box_from, box_to, item, quantity, comment):
 
 
 @render_to('receipt.html')
-@permission_required('admin')
+@permission_required(generic_permission)
 @login_required
 def receipt(request):
     def get_item_names_json():
@@ -333,13 +335,13 @@ def ajax_create_or_update_packet(request):
 
 
 @render_to('requests/list.html')
-@permission_required('admin')
+@permission_required(generic_permission)
 @login_required
 def requests_list(request, message=None, message_status=None):
     return {'requests': Request.objects.filter(processed=0), 'message': message, 'message_status': message_status}
 
 @render_to('requests/process.html')
-@permission_required('admin')
+@permission_required(generic_permission)
 @login_required
 def requests_process(request, id):
     def get_packet_items_json():
@@ -400,14 +402,14 @@ def requests_process(request, id):
 
 @render_to('stocktaking/list.html')
 @login_required
-@permission_required('admin')
+@permission_required(generic_permission)
 def stocktaking_list(request):
     boxes = Box.objects.exclude(pk=2).exclude(pk=3).exclude(pk=4).exclude(deleted=True)
     return {'boxes': boxes}
 
 
 @render_to('stocktaking/process.html')
-@permission_required('admin')
+@permission_required(generic_permission)
 @login_required
 def stocktaking_process(request, box_id):
     def get_items_in_box():
