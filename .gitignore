@@ -2,6 +2,7 @@
 inventory_project/static/admin/
 inventory_project/static/datepicker/
 inventory_project/static/bootstrap_toolkit/
+inventory_project/inventory_project/secret.py
 
 # C extensions
 *.so
