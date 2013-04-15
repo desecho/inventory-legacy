@@ -42,7 +42,6 @@ class Choices:
         boxes = Box.objects.filter(box_type=id)
         if self.hide_deleted:
             boxes = boxes.exclude(deleted=True)
-        boxes = boxes.order_by('name')
         return self.create_list(boxes)
 
     def output(self, list):

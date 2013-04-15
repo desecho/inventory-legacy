@@ -30,7 +30,6 @@ You can create boxes of type 5 and 6 by using administration panel.
 ```
 python manage.py syncdb
 python manage.py collectstatic
-python manage.py shell
 ```
 
 * Import db.sql to your database
