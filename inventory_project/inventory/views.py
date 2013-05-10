@@ -185,7 +185,7 @@ class RequestData:
         item_names_in_boxes = []
         for box in boxes:
             item_names_in_box = []
-            inventory_items = InventoryItem.objects.filter(box=box)
+            inventory_items = InventoryItem.objects.filter(box=box).order_by('item__name')
             for inventory_item in inventory_items:
                 item_names_in_box.append((inventory_item.item.pk,
                                          inventory_item.item.name))
