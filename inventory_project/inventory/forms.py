@@ -36,6 +36,7 @@ class Choices:
         items = Item.objects.all()
         if self.hide_deleted:
             items = items.exclude(deleted=True)
+        items = items.order_by('name')
         return self.create_list(items)
 
     def create_box_list(self, id):
