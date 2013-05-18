@@ -15,6 +15,17 @@ $(function() {
   }
 });
 
+function get_current_datetime() {
+  var currentDate = new Date();
+  var day = currentDate.getDate();
+  var month = currentDate.getMonth() + 1;
+  var year = currentDate.getFullYear();
+  var hours = currentDate.getHours();
+  var minutes = currentDate.getMinutes();
+  if (minutes < 10) minutes = '0' + minutes;
+  return day + '.' + month + '.' + year + ' ' + hours + ":" + minutes;
+}
+
 function submit_form() {
   function create_packet() {
     var packet_id = ajax_create_or_update_packet();
@@ -47,7 +58,7 @@ function print_request() {
       var id = item_ids[i];
       output += '<tr><td>' + $('#box' + id).find(":selected").text() + '</td><td>' + $('#item_name' + id).find(":selected").text() + '</td><td>' + $('#quantity' + id).val() + '</td><td>' + $('#comment' + id).val() + '</td></tr>';
     }
-    output += '</tbody></table><br><br>' + $('#id_person').find(":selected").text() + ' _______________________________<br>Гуров А. С. _______________________________';
+    output += '</tbody></table><br><br>Выписано на: ' + $('#id_person').find(":selected").text() + '<br>Дата: ' + get_current_datetime() + '<br><br>' + user + ' _______________________________<br>Гуров А. С. _______________________________';
     $('#to-print').html(output);
   }
   if (validate_form()) {
@@ -55,3 +66,9 @@ function print_request() {
     window.print();
   }
 }
+
+
+
+
+
+

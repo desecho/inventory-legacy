@@ -413,7 +413,6 @@ def requests_process(request, id):
 @permission_required(generic_permission)
 def stocktaking_list(request):
     boxes = Box.objects.filter(box_type__gt=3).exclude(deleted=True).order_by('box_type', 'name')
-
     return {'boxes': boxes}
 
 
