@@ -58,7 +58,7 @@ function print_request() {
       var id = item_ids[i];
       output += '<tr><td>' + $('#box' + id).find(":selected").text() + '</td><td>' + $('#item_name' + id).find(":selected").text() + '</td><td>' + $('#quantity' + id).val() + '</td><td>' + $('#comment' + id).val() + '</td></tr>';
     }
-    output += '</tbody></table><br><br>Выписано на: ' + $('#id_person').find(":selected").text() + '<br>Дата: ' + get_current_datetime() + '<br><br>' + user + ' _______________________________<br>Гуров А. С. _______________________________';
+    output += '</tbody></table><br><br>Дата/Время: ' + get_current_datetime() + '<br>Тип заявки: ' + request_type_text + '<br>Выписано на: ' + $('#id_person').find(":selected").text() + '<br><br>' + user + ' _______________________________<br>Гуров А. С. _______________________________';
     $('#to-print').html(output);
   }
   if (validate_form()) {
@@ -66,3 +66,8 @@ function print_request() {
     window.print();
   }
 }
+
+
+
+
+
