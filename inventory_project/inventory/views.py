@@ -250,10 +250,12 @@ def ajax_check_availability_receipt(request):
     def sum_duplicates(items):
         output = {}
         for item in items:
-            if (item[0], item[1]) in output:
-                output[(item[0], item[1])] += int(item[2])
+            box_and_item = (item[0], item[1])
+            quantity = int(item[2])
+            if box_and_item in output:
+                output[box_and_item] += quantity
             else:
-                output[(item[0], item[1])] = int(item[2])
+                output[box_and_item] = quantity
         return output
 
     def is_enough_items_in_inventory(items_request):
