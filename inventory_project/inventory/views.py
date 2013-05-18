@@ -285,10 +285,12 @@ def ajax_check_availability_expense(request):
     def sum_duplicates(items_request):
         output = {}
         for item_request in items_request:
-            if item_request[1] in output:
-                output[item_request[1]] += int(item_request[2])
+            item_id = item_request[1]
+            quantity = int(item_request[2])
+            if item_id in output:
+                output[item_id] += quantity
             else:
-                output[item_request[1]] = int(item_request[2])
+                output[item_id] = quantity
         return output
 
     def required_comments_present(items):
