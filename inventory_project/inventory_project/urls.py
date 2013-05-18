@@ -21,6 +21,8 @@ urlpatterns = patterns(
     url(r'^requests/create-or-update-packet/$', 'inventory.views.ajax_create_or_update_packet'),
     url(r'^requests/list/$', 'inventory.views.requests_list'),
     url(r'^requests/list-processed/$', 'inventory.views.requests_list_processed'),
+    url(r'^requests/list-mine/$', 'inventory.views.requests_list_mine'),
+    url(r'^requests/view/(?P<id>\d+)?$', 'inventory.views.requests_view'),
     url(r'^requests/process/(?P<id>\d+)?$', 'inventory.views.requests_process'),
     url(r'^stocktaking/list/$', 'inventory.views.stocktaking_list'),
     url(r'^stocktaking/process/(?P<box_id>\d+)?$', 'inventory.views.stocktaking_process'),

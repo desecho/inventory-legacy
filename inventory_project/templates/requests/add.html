@@ -16,7 +16,7 @@
   var boxes = jQuery.parseJSON('{{ boxes|safe }}');
   var request_type = {{ request_type.pk }};
   var request_type_text = '{{ request_type.name }}';
-  var user = '{{ user.first_name }} {{ user.last_name }}';
+  var user = '{{ user.get_full_name }}';
 </script>
 <h1 class="text-center">{{ request_type.name }}</h1>
 <form enctype="multipart/form-data" action="" method="POST" id="request">

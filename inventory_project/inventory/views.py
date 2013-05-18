@@ -258,7 +258,7 @@ def ajax_check_availability_receipt(request):
                 output[box_and_item] = quantity
         return output
 
-    def is_enough_items_in_inventory(items_request):
+    def is_enough_items_in_inventory(items_request, is_process_form):
         def get_items_already_requested():
             output = []
             requests = Request.objects.filter(processed=False)
@@ -270,7 +270,9 @@ def ajax_check_availability_receipt(request):
             return sum_duplicates(output)
         message = None
         status = True
-        items_already_requested = get_items_already_requested()
+        items_already_requested = {}
+        if not is_process_form:
+            items_already_requested = get_items_already_requested()
         for item_request in items_request:
             box_id = item_request[0]
             item_id = item_request[1]
@@ -294,7 +296,8 @@ def ajax_check_availability_receipt(request):
         POST = request.POST
         if 'item_data' in POST:
             items = sum_duplicates(json.loads(POST.get('item_data')))
-            status, message = is_enough_items_in_inventory(items)
+            is_process_form = json.loads(POST.get('is_process_form'))
+            status, message = is_enough_items_in_inventory(items, is_process_form)
             return {'status': status, 'message': message}
 
 
@@ -393,17 +396,39 @@ def requests_list(request, message=None, message_status=None):
             'message': message,
             'message_status': message_status}
 
+
+@render_to('requests/list-mine.html')
+@login_required
+def requests_list_mine(request):
+    return {'requests': Request.objects.filter(processed=0, user=request.user)}
+
+def get_packet_items_json(packet):
+    packet_items = PacketItem.objects.filter(packet=packet)
+    output = []
+    for item in packet_items:
+        output.append((item.box.pk, item.item.pk, item.quantity, item.comment))
+    return json.dumps(output)
+
+@render_to('requests/view.html')
+@login_required
+def requests_view(request, id):
+    request_item = Request.objects.get(pk=id)
+    request_type = request_item.request_type
+    person = request_item.person
+    packet = request_item.packet
+    request_data = RequestData(request_type.pk)
+    return {'boxes': request_data.get_choices_json(),
+            'item_names_in_boxes': request_data.get_item_names_in_boxes_json(),
+            'request_type': request_type,
+            'person': person,
+            'date': request_item.date,
+            'packet_id': packet.pk,
+            'packet_items': get_packet_items_json(packet)}
+
 @render_to('requests/process.html')
 @permission_required(generic_permission)
 @login_required
 def requests_process(request, id):
-    def get_packet_items_json():
-        packet_items = PacketItem.objects.filter(packet=packet)
-        output = []
-        for item in packet_items:
-            output.append((item.box.pk, item.item.pk, item.quantity, item.comment))
-        return json.dumps(output)
-
     def delete_request_with_its_packet():
         packet.delete()
         request_item.delete()
@@ -449,8 +474,10 @@ def requests_process(request, id):
             'item_names_in_boxes': request_data.get_item_names_in_boxes_json(),
             'request_type': request_type,
             'person': person,
+            'date': request_item.date,
+            'request_user': request_item.user,
             'packet_id': packet.pk,
-            'packet_items': get_packet_items_json()}
+            'packet_items': get_packet_items_json(packet)}
 
 
 @render_to('stocktaking/list.html')

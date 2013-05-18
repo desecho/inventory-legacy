@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 
+<link rel="stylesheet" href="/static/css/print.css" media="print" />
+
 <script src="/static/libs/jquery-validation-plugin/jquery.validate.min.js"></script>
 <script src="/static/libs/jquery-validation-plugin/validate.messages_ru.js"></script>
 
@@ -9,7 +11,7 @@
 <script src="/static/libs/select2/select2_locale_ru.js"></script>
 
 <script src="/static/js/request_view_general.js"></script>
-<script src="/static/js/request_process.js"></script>
+<script src="/static/js/request_view.js"></script>
 <script src="/static/js/request.js"></script>
 <script>
   var item_names_in_boxes = jQuery.parseJSON('{{ item_names_in_boxes|safe }}')
@@ -18,31 +20,31 @@
   var packet_items = jQuery.parseJSON('{{ packet_items|safe }}');
   var person_id = {{ person.pk }};
   var packet_id = {{ packet_id }};
+  var request_type_text = '{{ request_type.name }}';
+  var user = '{{ user.get_full_name }}';
+  var date = '{{ date }}';
 </script>
-<h1 class="text-center">Обработка заявки</h1>
+<h1 class="text-center">Просмотр заявки</h1>
 <dl class="dl-horizontal">
   <dt>Тип Заявки</dt>
   <dd>{{ request_type.name }}</dd>
   <dt>Дата</dt>
   <dd>{{ date }}</dd>
-  <dt>Выписал</dt>
-  <dd>{{ request_user.get_full_name }}</dd>
   <dt>Лицо</dt>
   <dd>{{ person.name }}</dd>
 </dl>
 <form enctype="multipart/form-data" action="" method="POST" id="request">
     {% csrf_token %}
     <br>
-    <p><a id="add_item" href="#" onclick="add_item()"><i class="icon-plus-sign"></i></a></p>
+    <p><a id="add_item" href="#" onclick="add_item()"></a></p>
     <div class="control-group">
       <div class="controls">
-        <input type="button" value="Обработать" onclick="process_request()" class="btn btn-primary">
-        <input type="button" value="Проверить" onclick="check_form(true)" class="btn">
-        <input type="button" value="Сохранить" onclick="save_request()" class="btn">
-        <input type="button" value="Удалить" onclick="delete_request()" class="btn">
+        <input type="button" value="Печать" onclick="print_request()" class="btn">
       </div>
     </div>
     <input type="hidden" id="delete" name="delete" value="0"/>
 </form>
+
+<div id="to-print"></div>
 
 {% endblock %}

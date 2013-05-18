@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="text-center">Мои необработанные заявки</h1>
+
+{% if requests %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Тип заявки</th>
+        <th>Лицо</th>
+        <th>Дата</th>
+        <th>Действие</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for request in requests %}
+      <tr>
+        <td>{{ request.request_type.name }}</td>
+        <td>{{ request.person.name }}</td>
+        <td>{{ request.date }}</td>
+        <td><a href="/requests/view/{{ request.pk }}">Просмотреть</a></td>
+       </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% else %}
+
+  Необработанные заявки отсутствуют.
+
+{% endif %}
+
+{% endblock %}

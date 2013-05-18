@@ -73,19 +73,21 @@ function add_item(no_link) {
   }
 }
 
-function check_form() {
-  if (validate_form()) {
+function check_form(is_process_form) {
+  is_process_form = typeof is_process_form !== 'undefined' ? is_process_form : false;
+  if (validate_form(is_process_form)) {
     displayMessage(1, 'Форма заполнена верно');
   }
 }
 
-function validate_form(){
+function validate_form(is_process_form){
+  is_process_form = typeof is_process_form !== 'undefined' ? is_process_form : false;
   function ajax_check_availability() {
     availability = false;
     $.ajax({
       type: 'POST',
       url: '/requests/check-availability/' + request_type + '/',
-      data: {'item_data': array2json(get_item_data()), 'person': person_id},
+      data: {'item_data': array2json(get_item_data()), 'person': person_id, 'is_process_form': is_process_form},
       success:  function(data) {
                   if (data.status) {
                     availability = true;
@@ -138,4 +140,29 @@ function ajax_create_or_update_packet(packet_id) {
       displayMessage(0, 'Ошибка создания пакета');
   });
   return new_packet_id;
+}
+
+function create_print_area() {
+  function get_current_date() {
+    var currentDate = new Date();
+    var day = currentDate.getDate();
+    var month = currentDate.getMonth() + 1;
+    var year = currentDate.getFullYear();
+    return day + '.' + month + '.' + year;
+  }
+  date = typeof date !== 'undefined' ? date : get_current_date();
+  var from_to_title;
+  if (request_type == 1) {
+    from_to_title = 'Откуда';
+  } else {
+    from_to_title = 'Куда';
+  }
+  var item_ids = get_item_ids();
+  var output = '<h2 class="text-center">Заявка</h2><table class="table"><thead><tr><th>' + from_to_title + '</th><th>Наименование</th><th>Количество</th><th>Комментарий</th></tr></thead><tbody>';
+  for (var i = 0, len = item_ids.length; i < len; i++) {
+    var id = item_ids[i];
+    output += '<tr><td>' + $('#box' + id).find(":selected").text() + '</td><td>' + $('#item_name' + id).find(":selected").text() + '</td><td>' + $('#quantity' + id).val() + '</td><td>' + $('#comment' + id).val() + '</td></tr>';
+  }
+  output += '</tbody></table><br><br>Дата: ' + date + '<br>Тип заявки: ' + request_type_text + '<br>Выписано на: ' + $('#id_person').find(":selected").text() + '<br><br>' + user + ' _______________________________<br>Гуров А. С. _______________________________';
+  $('#to-print').html(output);
 }
