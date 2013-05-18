@@ -502,7 +502,7 @@ def stocktaking_process(request, box_id):
             'item_names': get_item_names_json()}
 
 
-@render_to('requests/list_processed.html')
+@render_to('requests/list-processed.html')
 @login_required
 def requests_list_processed(request):
     def get_items(person, date_from, date_to):
