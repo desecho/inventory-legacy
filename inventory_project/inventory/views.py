@@ -250,7 +250,7 @@ def ajax_check_availability_receipt(request):
     def sum_duplicates(items):
         output = {}
         for item in items:
-            box_and_item = (item[0], item[1])
+            box_and_item = (int(item[0]), int(item[1]))
             quantity = int(item[2])
             if box_and_item in output:
                 output[box_and_item] += quantity
@@ -259,15 +259,33 @@ def ajax_check_availability_receipt(request):
         return output
 
     def is_enough_items_in_inventory(items_request):
+        def get_items_already_requested():
+            output = []
+            requests = Request.objects.filter(processed=False)
+            for request in requests:
+                packet = request.packet
+                items = PacketItem.objects.filter(packet=packet)
+                for item in items:
+                    output.append((item.box_id, item.item_id, item.quantity))
+            return sum_duplicates(output)
         message = None
         status = True
+        items_already_requested = get_items_already_requested()
         for item_request in items_request:
-            box = Box.objects.get(pk=item_request[0])
-            item = Item.objects.get(pk=item_request[1])
+            box_id = item_request[0]
+            item_id = item_request[1]
+            box = Box.objects.get(pk=box_id)
+            item = Item.objects.get(pk=item_id)
             quantity = items_request[item_request]
-            if not is_enough_item_in_inventory(box, item, quantity):
-                message = (u'Недостаточно "%s" в "%s" (необходимо %d, в наличие %d)' %
-                    (item.name, box.name, quantity, get_quantity_in_inventory(box, item)))
+            item_already_requested = items_already_requested.get((box_id, item_id))
+            if item_already_requested:
+                already_requested_text = u'уже выписано %d, ' % item_already_requested
+            else:
+                item_already_requested = 0
+                already_requested_text = ''
+            if not is_enough_item_in_inventory(box, item, quantity + item_already_requested):
+                message = (u'Недостаточно "%s" в "%s" (необходимо %d, %sв наличие %d)' %
+                    (item.name, box.name, quantity, already_requested_text, get_quantity_in_inventory(box, item)))
                 status = False
                 break
         return (status, message)
@@ -300,8 +318,18 @@ def ajax_check_availability_expense(request):
         return True
 
     def is_enough_items_in_inventory(items_request, box):
+        def get_items_already_requested():
+            output = []
+            requests = Request.objects.filter(processed=False)
+            for request in requests:
+                packet = request.packet
+                items = PacketItem.objects.filter(packet=packet)
+                for item in items:
+                    output.append((item.box_id, item.item_id, item.quantity))
+            return sum_duplicates(output)
         message = None
         status = True
+        items_already_requested = get_items_already_requested()
         for item_request in items_request:
             item = Item.objects.get(pk=item_request)
             quantity = items_request[item_request]
