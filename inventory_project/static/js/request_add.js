@@ -66,9 +66,3 @@ function print_request() {
     window.print();
   }
 }
-
-
-
-
-
-

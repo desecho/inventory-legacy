@@ -10,6 +10,7 @@ urlpatterns = patterns(
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     url(r'^logout/$', 'inventory.views.logout_view'),
     url(r'^receipt/$', 'inventory.views.receipt'),
+    url(r'^add-location/$', 'inventory.views.add_location'),
     url(r'^reports/inventory/$', 'inventory.views.reports_inventory'),
     url(r'^reports/inventory-storage/$', 'inventory.views.reports_inventory_storage'),
     url(r'^reports/movements/$', 'inventory.views.reports_movements'),

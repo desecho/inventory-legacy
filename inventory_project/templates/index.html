@@ -3,12 +3,13 @@
 {% block home_panel %}{% endblock %}
 {% block content %}
 
+<h3>Администрирование</h3>
 {% if perms.inventory %}
-    <h3>Администрирование</h3>
     <a href="/receipt/">Оформить Приход на Склад</a><br>
     <a href="/requests/list">Необработанные заявки</a><br>
-    <a href="/stocktaking/list">Инвентаризация</a>
+    <a href="/stocktaking/list">Инвентаризация</a><br>
 {% endif %}
+<a href="/add-location">Добавить узел</a>
 
 <h3>Заявки</h3>
 

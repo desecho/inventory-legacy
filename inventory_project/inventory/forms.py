@@ -110,6 +110,17 @@ class ReceiptForm(forms.ModelForm):
                                                'title': 'число'}),
         }
 
+class LocationForm(forms.ModelForm):
+    name = forms.CharField(label='Адрес',
+                           widget=forms.TextInput(attrs={'required': '', 'autofocus': ''}))
+
+    def clean_name(self):
+        return self.cleaned_data['name'].strip()
+
+    class Meta:
+        model = Box
+        exclude = ('box_type', 'deleted')
+
 
 class InventoryReportForm(forms.Form):
     choices = Choices()

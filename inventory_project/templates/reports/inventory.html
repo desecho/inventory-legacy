@@ -4,6 +4,8 @@
 
 {% block content %}
 
+<link rel="stylesheet" href="/static/css/print.css" media="print" />
+
 <script>
   function reset_form() {
     $('#id_item').val('0');
@@ -17,31 +19,35 @@
   {{ form|as_bootstrap }}
   <div class="control-group">
     <div class="controls">
-        <input type="submit" value="Сформировать" class="btn btn-primary"> 
+        <input type="submit" value="Сформировать" class="btn btn-primary">
         <input type="button" value="Сбросить" onclick="reset_form()" class="btn">
+        <input type="button" value="Печать" onclick="window.print()" class="btn">
     </div>
-  </div> 
+  </div>
 </form>
- 
+
 {% if inventory %}
-<table class="table">
-  <thead>
-    <tr>
-      <th>Коробка</th>
-      <th>Наименование</th>
-      <th>Количество</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for item in inventory %}
-    <tr>
-        <td>{{ item.box }}</td>
-        <td>{{ item.item }}</td>
-        <td>{{ item.quantity }}</td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+<div id="to-print">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Коробка</th>
+        <th>Наименование</th>
+        <th>Количество</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in inventory %}
+      <tr>
+          <td>{{ item.box }}</td>
+          <td>{{ item.item }}</td>
+          <td>{{ item.quantity }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endif %}
+
 
 {% endblock %}

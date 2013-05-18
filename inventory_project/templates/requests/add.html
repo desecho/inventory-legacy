@@ -19,17 +19,17 @@
 </script>
 <h1 class="text-center">{{ request_type.name }}</h1>
 <form enctype="multipart/form-data" action="" method="POST" id="request">
-    {% csrf_token %}
-    {{ form|as_bootstrap }}
-    <br>
-    <p><a id="add_item" href="#" onclick="add_item()"><i class="icon-plus-sign"></i></a></p>
-    <div class="control-group">
-      <div class="controls">
-        <input type="button" value="Отправить" onclick="submit_form()" class="btn btn-primary">
-        <input type="button" value="Проверить" onclick="check_form()" class="btn">
-        <input type="button" value="Печать" onclick="print_request()" class="btn">
-      </div>
+  {% csrf_token %}
+  {{ form|as_bootstrap }}
+  <br>
+  <p><a id="add_item" href="#" onclick="add_item()"><i class="icon-plus-sign"></i></a></p>
+  <div class="control-group">
+    <div class="controls">
+      <input type="button" value="Отправить" onclick="submit_form()" class="btn btn-primary">
+      <input type="button" value="Проверить" onclick="check_form()" class="btn">
+      <input type="button" value="Печать" onclick="print_request()" class="btn">
     </div>
+  </div>
 </form>
 
 <div id="to-print"></div>

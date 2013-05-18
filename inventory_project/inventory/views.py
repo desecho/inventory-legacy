@@ -5,8 +5,8 @@ from inventory.models import (Item, Box, InventoryItem, Movement, Packet,
                               PacketItem, Request, RequestType)
 from inventory.forms import (ReceiptForm, InventoryReportForm,
                              MovementsReportForm, RequestAddForm,
-                             RequestsListProcessedForm, Choices,
-                             date_initial)
+                             RequestsListProcessedForm, LocationForm,
+                             Choices, date_initial)
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
@@ -83,13 +83,26 @@ def receipt(request):
                   Box.objects.get(pk=1),  # storage
                   form.cleaned_data['item'], form.cleaned_data['quantity'],
                   form.cleaned_data['comment'])
-        message = 'Оформлено'
+        message = 'Приход на склад оформлен'
         form = ReceiptForm()
     return {'form': form,
             'items': get_item_names_json(),
             'message': message,
             'message_status': 1}
 
+
+@render_to('add-location.html')
+@login_required
+def add_location(request):
+    message = None
+    form = LocationForm(request.POST or None)
+    if form.is_valid():
+        Box(box_type_id=6, name=form.cleaned_data['name']).save()
+        message = 'Узел добавлен'
+        form = LocationForm()
+    return {'form': form,
+            'message': message,
+            'message_status': 1}
 
 @render_to('reports/inventory.html')
 @login_required
