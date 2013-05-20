@@ -111,7 +111,7 @@ class Request(models.Model):
     user = models.ForeignKey(User, verbose_name='пользователь')
     person = models.ForeignKey(Box, verbose_name='лицо')
     packet = models.ForeignKey(Packet, verbose_name='пакет')
-    date = models.DateField('дата', auto_now_add=True)
+    date = models.DateTimeField('дата/время', auto_now_add=True)
     processed = models.BooleanField('обработано')
 
     class Meta:

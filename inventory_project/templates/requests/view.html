@@ -20,14 +20,14 @@
   var packet_id = {{ packet_id }};
   var request_type_text = '{{ request_type.name }}';
   var user = '{{ user.get_full_name }}';
-  var date = '{{ date }}';
+  var date = '{{ date|date:"j.n.Y H:i" }}';
 </script>
 <h1 class="text-center">Просмотр заявки</h1>
 <dl class="dl-horizontal">
   <dt>Тип Заявки</dt>
   <dd>{{ request_type.name }}</dd>
   <dt>Дата</dt>
-  <dd>{{ date }}</dd>
+  <dd>{{ date|date:"j.n.Y H:i" }}</dd>
   <dt>Лицо</dt>
   <dd>{{ person.name }}</dd>
 </dl>

@@ -21,7 +21,7 @@
         <td>{{ request.request_type.name }}</td>
         <td>{{ request.user.username }}</td>
         <td>{{ request.person.name }}</td>
-        <td>{{ request.date }}</td>
+        <td>{{ request.date|date:"j.n.Y H:i" }}</td>
         <td><a href="/requests/process/{{ request.pk }}">Обработать</a></td>
        </tr>
       {% endfor %}
@@ -33,5 +33,5 @@
   Необработанные заявки отсутствуют.
 
 {% endif %}
- 
+
 {% endblock %}

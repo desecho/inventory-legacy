@@ -144,14 +144,21 @@ function ajax_create_or_update_packet(packet_id) {
 }
 
 function create_print_area() {
-  function get_current_date() {
-    var currentDate = new Date();
-    var day = currentDate.getDate();
-    var month = currentDate.getMonth() + 1;
-    var year = currentDate.getFullYear();
-    return day + '.' + month + '.' + year;
+  function get_current_datetime() {
+    var current_date = new Date();
+    var day = current_date.getDate();
+    var month = current_date.getMonth() + 1;
+    var year = current_date.getFullYear();
+    var time = current_date.getFullYear();
+    var year = current_date.getFullYear();
+    var hours = current_date.getHours();
+    var minutes = current_date.getMinutes();
+    if (minutes < 10) {
+      minutes = '0' + minutes;
+    }
+    return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
   }
-  date = typeof date !== 'undefined' ? date : get_current_date();
+  date = typeof date !== 'undefined' ? date : get_current_datetime();
   var from_to_title;
   if (request_type == 1) {
     from_to_title = 'Откуда';
@@ -164,6 +171,6 @@ function create_print_area() {
     var id = item_ids[i];
     output += '<tr><td>' + $('#box' + id).find(":selected").text() + '</td><td>' + $('#item_name' + id).find(":selected").text() + '</td><td>' + $('#quantity' + id).val() + '</td><td>' + $('#comment' + id).val() + '</td></tr>';
   }
-  output += '</tbody></table><br><br>Дата: ' + date + '<br>Тип заявки: ' + request_type_text + '<br>Выписано на: ' + $('#id_person').find(":selected").text() + '<br><br>' + user + ' _______________________________<br>Гуров А. С. _______________________________';
+  output += '</tbody></table><br><br>Дата/Время: ' + date + '<br>Тип заявки: ' + request_type_text + '<br>Выписано на: ' + $('#id_person').find(":selected").text() + '<br><br>' + user + ' _______________________________<br>Гуров А. С. _______________________________';
   $('#to-print').html(output);
 }
