@@ -45,10 +45,10 @@ function update_select_items(id, box_id) {
 
 function add_item(no_link) {
   function create_select_boxes() {
-    var output = '<select id="box' + item_id + '">';
+    var output = '<select class="box-select" id="box' + item_id + '">';
     for (var i = 0, len = boxes.length; i < len; i++) {
-          output += '<option value="' + boxes[i][0] + '">' + boxes[i][1] + '</option>';
-        }
+        output += '<option value="' + boxes[i][0] + '">' + boxes[i][1] + '</option>';
+      }
     output += '</select>';
     return output;
   }
@@ -65,6 +65,7 @@ function add_item(no_link) {
   }
   var item_input = '<div class="item" data-id="' + item_id + '" id="item' + item_id + '">' + create_select_boxes() + create_select_items() + ' <input type="text" name="quantity' + item_id + '" id="quantity' + item_id + '"  class="quantity" placeholder="Количество"/> <input type="text" name="comment' + item_id + '" id="comment' + item_id + '" placeholder="Комментарий"/>' + link + '<br></div>';
   $('#add_item').before(item_input);
+  $('#box' + item_id).select2();
   if (request_type == 1) {
     update_select_items(item_id, 1); //set initial options for newly created select
     $('#box' + item_id).attr('onchange', 'update_select_items(' + item_id + ', this.value);');

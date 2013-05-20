@@ -104,6 +104,19 @@ def add_location(request):
             'message': message,
             'message_status': 1}
 
+
+@ajax_request
+def ajax_add_location(request):
+    if request.is_ajax() and request.method == 'POST':
+        POST = request.POST
+        if 'location' in POST:
+            location = POST.get('location')
+            box = Box(box_type_id=6, name=location)
+            box.save()
+            return {'location': location,
+                    'id': box.pk}
+
+
 @render_to('reports/inventory.html')
 @login_required
 def reports_inventory(request):

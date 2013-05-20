@@ -39,3 +39,23 @@ function print_request() {
     window.print();
   }
 }
+
+function add_location(){
+  function add_location_to_boxes(id, name) {
+    $('.box-select').each(function() {
+      var option = '<option value="' + id + '">' + name + '</option>';
+      $(this).select2('destroy');
+      $(this).append(option);
+    });
+    $('.box-select').each(function() {
+      $(this).select2();
+    });
+  }
+  var location = $('#location').val();
+  $.post('/ajax-add-location/', {location: location}, function(data) {
+    add_location_to_boxes(data.id, data.location);
+    displayMessage(1, 'Узел успешно добавлен');
+  }).error(function() {
+    displayMessage(0, 'Ошибка добавления узла');
+  });
+}

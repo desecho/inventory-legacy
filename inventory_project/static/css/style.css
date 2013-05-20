@@ -16,6 +16,10 @@
     width: 400px;
 }
 
+.box-select {
+    width: 200px;
+}
+
 .select2-container .select2-choice {
     background: none;
     height: 28px !important;
@@ -66,4 +70,8 @@ label.error {
 
 .to-print {
     visibility: hidden;
+}
+
+#location-button {
+    margin-top: -10px;
 }

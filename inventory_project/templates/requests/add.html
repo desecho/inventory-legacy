@@ -18,9 +18,18 @@
   var user = '{{ user.get_full_name }}';
 </script>
 <h1 class="text-center">{{ request_type.name }}</h1>
+
 <form enctype="multipart/form-data" action="" method="POST" id="request">
   {% csrf_token %}
   {{ form|as_bootstrap }}
+
+  {% ifequal request_type.pk 2 %}
+  <div class="controls" id="location-addition">
+    <input id="location" name="location" required="" type="text" />
+    <input id="location-button" type="button" value="Добавить узел" onclick="add_location()" class="btn">
+  </div>
+  {% endifequal %}
+
   <br>
   <p><a id="add_item" href="#" onclick="add_item()"><i class="icon-plus-sign"></i></a></p>
   <div class="control-group">
