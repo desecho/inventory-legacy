@@ -18,7 +18,7 @@ class Choices:
         self.expense = self.create_box_list(2)
         self.receipt = self.create_box_list(1)
         self.storage_with_locations = self.storage + self.locations
-        self.expense_with_locations = self.expense + self.locations  # for views
+        self.expense_and_storage_with_locations = self.expense + self.storage + self.locations  # for views
         self.basic_set = self.storage + self.persons + self.locations + self.correction
         self.boxes_from = self.receipt + self.basic_set
         self.boxes_to = self.expense + self.basic_set

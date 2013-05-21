@@ -222,7 +222,7 @@ class RequestData:
         if self.request_type == 1:
             choices = Choices().storage_with_locations
         else:
-            choices = Choices().expense_with_locations
+            choices = Choices().expense_and_storage_with_locations
         return json.dumps(choices)
 
 
