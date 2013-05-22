@@ -69,8 +69,11 @@ class Choices:
 
 
 class RequestAddForm(forms.ModelForm):
-    person = forms.ChoiceField(label='Лицо',
-                               choices=Choices().persons_with_no_default_value)
+    def __init__(self, *args, **kwargs):
+        super(RequestAddForm, self).__init__(*args, **kwargs)
+        self.fields['person'].choices = Choices().persons_with_no_default_value
+
+    person = forms.ChoiceField(label='Лицо')
 
     class Meta:
         model = Request
@@ -110,6 +113,7 @@ class ReceiptForm(forms.ModelForm):
                                                'title': 'число'}),
         }
 
+
 class LocationForm(forms.ModelForm):
     name = forms.CharField(label='Адрес',
                            widget=forms.TextInput(attrs={'required': '', 'autofocus': ''}))
@@ -123,11 +127,16 @@ class LocationForm(forms.ModelForm):
 
 
 class InventoryReportForm(forms.Form):
-    choices = Choices()
-    item = forms.ChoiceField(label='Наименование', choices=choices.output_items(), required=False)
-    person = forms.ChoiceField(label='Лицо', choices=choices.output_persons(), required=False)
-    location = forms.ChoiceField(label='Узел',
-                                 choices=choices.output_storage_with_locations(), required=False)
+    def __init__(self, *args, **kwargs):
+            super(InventoryReportForm, self).__init__(*args, **kwargs)
+            choices = Choices()
+            self.fields['item'].choices = choices.output_items()
+            self.fields['person'].choices = choices.output_persons()
+            self.fields['location'].choices = choices.output_storage_with_locations()
+
+    item = forms.ChoiceField(label='Наименование', required=False)
+    person = forms.ChoiceField(label='Лицо', required=False)
+    location = forms.ChoiceField(label='Узел', required=False)
 
     def clean_item(self):
         if not int(self.cleaned_data['item']):
@@ -160,11 +169,18 @@ def create_form_date_field(date_type):
 
 
 class MovementsReportForm(forms.Form):
-    choices = Choices(False)
-    box = forms.ChoiceField(label='Коробка', choices=choices.output_boxes(), required=False)
-    box_from = forms.ChoiceField(label='Откуда', choices=choices.output_boxes_from(), required=False)
-    box_to = forms.ChoiceField(label='Куда', choices=choices.output_boxes_to(), required=False)
-    item = forms.ChoiceField(label='Наименование', choices=choices.output_items(), required=False)
+    def __init__(self, *args, **kwargs):
+        super(MovementsReportForm, self).__init__(*args, **kwargs)
+        choices = Choices(False)
+        self.fields['box'].choices = choices.output_boxes()
+        self.fields['box_from'].choices = choices.output_boxes_from()
+        self.fields['box_to'].choices = choices.output_boxes_to()
+        self.fields['item'].choices = choices.output_items()
+
+    box = forms.ChoiceField(label='Коробка', required=False)
+    box_from = forms.ChoiceField(label='Откуда', required=False)
+    box_to = forms.ChoiceField(label='Куда', required=False)
+    item = forms.ChoiceField(label='Наименование', required=False)
     date_from = create_form_date_field('from')
     date_to = create_form_date_field('to')
 
@@ -190,9 +206,11 @@ class MovementsReportForm(forms.Form):
 
 
 class RequestsListProcessedForm(forms.Form):
-    person = forms.ChoiceField(label='Лицо',
-                               choices=Choices().persons_with_no_default_value,
-                               widget=forms.Select(attrs={'required': ''}))
+    def __init__(self, *args, **kwargs):
+        super(RequestsListProcessedForm, self).__init__(*args, **kwargs)
+        self.fields['person'].choices = Choices().persons_with_no_default_value
+
+    person = forms.ChoiceField(label='Лицо', widget=forms.Select(attrs={'required': ''}))
     date_from = create_form_date_field('from')
     date_to = create_form_date_field('to')
 
