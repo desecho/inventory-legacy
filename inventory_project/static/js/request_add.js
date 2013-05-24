@@ -50,6 +50,8 @@ function add_location(){
     $('.box-select').each(function() {
       $(this).select2();
     });
+    var new_location = [id, name];
+    boxes.push(new_location);
   }
   var location = $('#location').val();
   $.post('/ajax-add-location/', {location: location}, function(data) {
