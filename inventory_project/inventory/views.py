@@ -6,11 +6,12 @@ from inventory.models import (Item, Box, InventoryItem, Movement, Packet,
 from inventory.forms import (ReceiptForm, InventoryReportForm,
                              MovementsReportForm, RequestAddForm,
                              RequestsListProcessedForm, LocationForm,
-                             Choices, date_initial)
+                             Choices, dates_initial)
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
 from annoying.decorators import ajax_request, render_to
+from datetime import datetime
 
 generic_permission = 'inventory.add_item'
 
@@ -120,7 +121,6 @@ def ajax_add_location(request):
 @render_to('reports/inventory.html')
 @login_required
 def reports_inventory(request):
-    inventory = None
     def filter_results(item, person, location):
         if item:
             inventory = InventoryItem.objects.filter(item=item)
@@ -132,6 +132,7 @@ def reports_inventory(request):
             inventory = inventory.filter(box=location)
         return inventory
 
+    inventory = None
     form = InventoryReportForm(request.POST or None)
     if form.is_valid():
         inventory = filter_results(form.cleaned_data['item'],
@@ -140,6 +141,7 @@ def reports_inventory(request):
         inventory = inventory.order_by('box__box_type', 'box__name',
                                        'item__name')
     return {'form': form, 'inventory': inventory}
+
 
 @render_to('reports/inventory-storage.html')
 @login_required
@@ -154,8 +156,8 @@ def reports_inventory_storage(request):
     return {'items': items}
 
 
-def get_date_initial():
-    return [date.strftime(settings.FORMAT_DATE) for date in date_initial]
+def get_dates_initial():
+    return [date.strftime(settings.FORMAT_DATE) for date in dates_initial]
 
 
 @render_to('reports/movements.html')
@@ -192,10 +194,10 @@ def reports_movements(request):
                                        'box_to__box_type',
                                        'box_from__name', 'box_to__name',
                                        'item__name')
-    # date_initial variable because it's more convinient for js form reset
+    # dates_initial variable because it's more convinient for js form reset
     return {'form': form,
             'movements': movements,
-            'date_initial': get_date_initial()}
+            'dates_initial': get_dates_initial()}
 
 
 class RequestData:
@@ -300,7 +302,7 @@ def ajax_check_availability_receipt(request):
                 already_requested_text = ''
             if not is_enough_item_in_inventory(box, item, quantity + item_already_requested):
                 message = (u'Недостаточно "%s" в "%s" (необходимо %d, %sв наличие %d)' %
-                    (item.name, box.name, quantity, already_requested_text, get_quantity_in_inventory(box, item)))
+                           (item.name, box.name, quantity, already_requested_text, get_quantity_in_inventory(box, item)))
                 status = False
                 break
         return (status, message)
@@ -334,24 +336,14 @@ def ajax_check_availability_expense(request):
         return True
 
     def is_enough_items_in_inventory(items_request, box):
-        def get_items_already_requested():
-            output = []
-            requests = Request.objects.filter(processed=False)
-            for request in requests:
-                packet = request.packet
-                items = PacketItem.objects.filter(packet=packet)
-                for item in items:
-                    output.append((item.box_id, item.item_id, item.quantity))
-            return sum_duplicates(output)
         message = None
         status = True
-        items_already_requested = get_items_already_requested()
         for item_request in items_request:
             item = Item.objects.get(pk=item_request)
             quantity = items_request[item_request]
             if not is_enough_item_in_inventory(box, item, quantity):
                 message = (u'Недостаточно "%s" у "%s" (необходимо %d, имеется %d)' %
-                    (item.name, box.name, quantity, get_quantity_in_inventory(box, item)))
+                           (item.name, box.name, quantity, get_quantity_in_inventory(box, item)))
                 status = False
                 break
         return (status, message)
@@ -415,12 +407,14 @@ def requests_list(request, message=None, message_status=None):
 def requests_list_mine(request):
     return {'requests': Request.objects.filter(processed=0, user=request.user)}
 
+
 def get_packet_items_json(packet):
     packet_items = PacketItem.objects.filter(packet=packet)
     output = []
     for item in packet_items:
         output.append((item.box.pk, item.item.pk, item.quantity, item.comment))
     return json.dumps(output)
+
 
 @render_to('requests/view.html')
 @login_required
@@ -437,6 +431,7 @@ def requests_view(request, id):
             'date': request_item.date,
             'packet_id': packet.pk,
             'packet_items': get_packet_items_json(packet)}
+
 
 @render_to('requests/process.html')
 @permission_required(generic_permission)
@@ -475,13 +470,13 @@ def requests_process(request, id):
     person = request_item.person
     packet = request_item.packet
     if request.method == 'POST':
-		delete = int(request.POST.get('delete'))
-		if delete:
-			delete_request_with_its_packet()
-			return requests_list(request, 'Заявка удалена', 1)
-		else:
-			process_request()
-			return requests_list(request, 'Заявка обработана', 1)
+        delete = int(request.POST.get('delete'))
+        if delete:
+            delete_request_with_its_packet()
+            return requests_list(request, 'Заявка удалена', 1)
+        else:
+            process_request()
+            return requests_list(request, 'Заявка обработана', 1)
     request_data = RequestData(request_type.pk)
     return {'boxes': request_data.get_choices_json(),
             'item_names_in_boxes': request_data.get_item_names_in_boxes_json(),
@@ -578,7 +573,11 @@ def stocktaking_process(request, box_id):
 @login_required
 def requests_list_processed(request):
     def get_items(person, date_from, date_to):
+        def convert_date_to_datetime(date):
+            'convert date to datetime to show last day results'
+            return datetime(date.year, date.month, date.day, 23, 59, 59)
         items = []
+        date_to = convert_date_to_datetime(date_to)
         for request in Request.objects.filter(person=person, processed=1, date__range=(date_from, date_to)):
             packet_items = PacketItem.objects.filter(packet=request.packet)
             for packet_item in packet_items:
@@ -591,5 +590,5 @@ def requests_list_processed(request):
         date_from = form.cleaned_data['date_from']
         date_to = form.cleaned_data['date_to']
         items = get_items(person, date_from, date_to)
-    # date_initial variable because it's more convinient for js form reset
-    return {'form': form, 'items': items, 'date_initial': get_date_initial()}
+    # dates_initial variable because it's more convinient for js form reset
+    return {'form': form, 'items': items, 'dates_initial': get_dates_initial()}

@@ -4,7 +4,7 @@ from datetime import timedelta, date
 from django.conf import settings
 from inventory.models import Item, Box, Request, InventoryItem
 
-date_initial = (date.today() - timedelta(days=30), date.today())
+dates_initial = (date.today() - timedelta(days=30), date.today())
 
 
 class Choices:
@@ -157,10 +157,10 @@ class InventoryReportForm(forms.Form):
 def create_form_date_field(date_type):
     if date_type == 'from':
         label = 'От'
-        initial_date = date_initial[0]
+        initial_date = dates_initial[0]
     else:
         label = 'До'
-        initial_date = date_initial[1]
+        initial_date = dates_initial[1]
     widget_attrs = {'required': '', 'pattern': '^\d{2}\.\d{2}\.\d{4}$'}
     return forms.DateField(label=label,
                            initial=initial_date,
