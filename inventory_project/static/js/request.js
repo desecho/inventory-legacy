@@ -149,8 +149,6 @@ function create_print_area() {
     var day = current_date.getDate();
     var month = current_date.getMonth() + 1;
     var year = current_date.getFullYear();
-    var time = current_date.getFullYear();
-    var year = current_date.getFullYear();
     var hours = current_date.getHours();
     var minutes = current_date.getMinutes();
     if (minutes < 10) {

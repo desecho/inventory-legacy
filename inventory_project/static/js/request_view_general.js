@@ -7,6 +7,7 @@ $(function() {
     }
     add_item(no_link);
     $('#box' + i).val(item[0]);
+    $('#box' + i).select2();
     $('#item_name' + i).val(item[1]);
     $('#item_name' + i).select2();
     $('#quantity' + i).val(item[2]);
