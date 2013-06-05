@@ -12,11 +12,11 @@ class Choices:
         self.hide_deleted = hide_deleted
         self.items = self.create_items_list()
         self.persons = self.create_box_list(5)
-        self.storage = self.create_box_list(4)
+        self.storage = self.create_box_list(1)
         self.locations = self.create_box_list(6)
-        self.correction = self.create_box_list(3)
+        self.correction = self.create_box_list(4)
         self.expense = self.create_box_list(2)
-        self.receipt = self.create_box_list(1)
+        self.receipt = self.create_box_list(3)
         self.storage_with_locations = self.storage + self.locations
         self.expense_and_storage_with_locations = self.expense + self.storage + self.locations  # for views
         self.basic_set = self.storage + self.persons + self.locations + self.correction
@@ -94,7 +94,7 @@ class ReceiptForm(forms.ModelForm):
 
     def clean_item(self):
         # Add a new item if it's not in the database yet.
-        item, created = Item.objects.get_or_create(
+        item, _ = Item.objects.get_or_create(
             name=self.cleaned_data['item'])
         return item
 

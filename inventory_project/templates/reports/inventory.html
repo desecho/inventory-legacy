@@ -24,7 +24,7 @@
   </div>
 </form>
 
-{% if inventory %}
+{% if items %}
 <div id="to-print">
   <table class="table">
     <thead>
@@ -35,7 +35,7 @@
       </tr>
     </thead>
     <tbody>
-    {% for item in inventory %}
+    {% for item in items %}
       <tr>
           <td>{{ item.box }}</td>
           <td>{{ item.item }}</td>

@@ -60,7 +60,7 @@ class Movement(models.Model):
     box_to = models.ForeignKey(Box, related_name='box_to', verbose_name='коробка к')
     item = models.ForeignKey(Item, verbose_name='наименование')
     quantity = models.IntegerField('количество')
-    date = models.DateField('дата', auto_now_add=True)
+    date = models.DateTimeField('дата', auto_now_add=True)
     comment = models.CharField('комментарий', max_length=255, null=True, blank=True)
 
     class Meta:
