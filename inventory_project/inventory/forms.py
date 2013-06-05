@@ -3,8 +3,10 @@ from django import forms
 from datetime import timedelta, date
 from django.conf import settings
 from inventory.models import Item, Box, Request, InventoryItem
+from django.contrib.auth.models import User
 
 dates_initial = (date.today() - timedelta(days=30), date.today())
+default_value = [('', '-' * 9)]
 
 
 class Choices:
@@ -23,7 +25,6 @@ class Choices:
         self.boxes_from = self.receipt + self.basic_set
         self.boxes_to = self.expense + self.basic_set
         self.boxes = self.receipt + self.expense + self.basic_set
-        default_value = [('', '-' * 9)]
         self.persons_with_no_default_value = default_value + self.persons
 
     def create_list(self, objects):
@@ -166,6 +167,30 @@ def create_form_date_field(date_type):
                            initial=initial_date,
                            widget=forms.DateInput(attrs=widget_attrs, format=settings.FORMAT_DATE),
                            input_formats=(settings.FORMAT_DATE,))
+
+
+class StatsReportForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+            super(StatsReportForm, self).__init__(*args, **kwargs)
+            users = User.objects.all()
+            users = [(user.pk, user.get_full_name()) for user in users]
+            self.fields['user'].choices = default_value + users
+
+    user = forms.ChoiceField(label='Пользователь', required=False)
+    period = forms.ChoiceField(label='Период', required=True, choices=[
+        (30, 'месяц'),
+        (180, 'полгода')]
+    )
+    date_from = create_form_date_field('from')
+    date_to = create_form_date_field('to')
+
+    def clean_user(self):
+        if not self.cleaned_data['user']:
+            return
+        return User.objects.get(pk=self.cleaned_data['user'])
+
+    def clean_period(self):
+        return int(self.cleaned_data['period'])
 
 
 class MovementsReportForm(forms.Form):

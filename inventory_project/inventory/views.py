@@ -1,12 +1,13 @@
 # -*- coding: utf8 -*-
 import json
+import chromelogger as console
 from django.shortcuts import redirect
 from inventory.models import (Item, Box, InventoryItem, Movement, Packet,
                               PacketItem, Request, RequestType)
 from inventory.forms import (ReceiptForm, InventoryReportForm,
                              MovementsReportForm, RequestAddForm,
                              RequestsListProcessedForm, LocationForm,
-                             Choices, dates_initial)
+                             StatsReportForm, Choices, dates_initial)
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
@@ -190,6 +191,68 @@ def reports_inventory(request):
                                form.cleaned_data['location'])
         items = items.order_by('box__box_type', 'box__name', 'item__name')
     return {'form': form, 'items': items}
+
+
+@render_to('reports/statistics.html')
+@login_required
+def reports_statistics(request):
+    def get_items(user, period, date_from, date_to):
+        def get_all_items():
+            def get():
+                items = []
+                requests = Request.objects.filter(request_type__pk=2,
+                                                  processed=1,
+                                                  date__range=(date_from, date_to))
+                if user is not None:
+                    requests = requests.filter(user=user)
+                for request in requests:
+                    packet_items = PacketItem.objects.filter(packet=request.packet)
+                    for packet_item in packet_items:
+                        items.append((packet_item.item, packet_item.quantity))
+                return items
+
+            def summ_duplicates():
+                output = {}
+                for item in items:
+                    name = item[0]
+                    qty = item[1]
+                    if name in output:
+                        output[name] += qty
+                    else:
+                        output[name] = qty
+                return output
+
+            items = get()
+            return summ_duplicates()
+
+        def get_stats():
+            def get_period_qty():
+                qty = total_qty / float(delta) * period
+                return round(qty, 2)
+
+            delta = (date_to - date_from).days
+            output = []
+            for name in items:
+                total_qty = items[name]
+                data = (name, total_qty, get_period_qty())
+                output.append(data)
+            return output
+
+        items = get_all_items()
+        items = get_stats()
+        return items
+
+    form = StatsReportForm(request.POST or None)
+    items = None
+    if form.is_valid():
+        user = form.cleaned_data['user']
+        period = form.cleaned_data['period']
+        date_from = form.cleaned_data['date_from']
+        date_to = form.cleaned_data['date_to']
+
+        items = get_items(user, period, date_from, date_to)
+    # returns dates_initial because it's more convinient for js form reset
+    return {'form': form, 'items': items, 'dates_initial': get_dates_initial()}
 
 
 @render_to('reports/inventory-storage.html')

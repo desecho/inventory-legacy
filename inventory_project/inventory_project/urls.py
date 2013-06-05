@@ -15,6 +15,7 @@ urlpatterns = patterns(
     url(r'^reports/inventory/$', 'inventory.views.reports_inventory'),
     url(r'^reports/inventory-storage/$', 'inventory.views.reports_inventory_storage'),
     url(r'^reports/movements/$', 'inventory.views.reports_movements'),
+    url(r'^reports/statistics/$', 'inventory.views.reports_statistics'),
     url(r'^requests/add/receipt$', 'inventory.views.requests_add_receipt'),
     url(r'^requests/check-availability/1/$', 'inventory.views.ajax_check_availability_receipt'),
     url(r'^requests/add/expense$', 'inventory.views.requests_add_expense'),

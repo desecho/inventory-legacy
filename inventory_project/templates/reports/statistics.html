@@ -8,15 +8,13 @@
 <script src="/static/libs/datepicker_ru.js"></script>
 <script>
   function reset_form() {
-    $('#id_item').val('0');
-    $('#id_box_from').val('0');
-    $('#id_box_to').val('0');
-    $('#id_box').val('0');
+    $('#id_user').val('');
+    $('#id_period').val('30');
     $('#id_date_from').val('{{ dates_initial.0 }}');
     $('#id_date_to').val('{{ dates_initial.1 }}');
   }
 </script>
-<h1 class="text-center">Отчёт о перемещениях</h1>
+<h1 class="text-center">Отчёт о статистике расхода материалов</h1>
 <form enctype="multipart/form-data" action="" method="POST" id="receipt" class="form-horizontal">
   {% csrf_token %}
   {{ form|as_bootstrap }}
@@ -29,33 +27,28 @@
   </div>
 </form>
 
-{% if movements %}
+{% if items %}
 <div id="to-print">
   <table class="table">
     <thead>
       <tr>
-        <th>Откуда</th>
-        <th>Куда</th>
         <th>Наименование</th>
-        <th>Количество</th>
-        <th>Дата</th>
-        <th>Комментарий</th>
+        <th>Израсходовано</th>
+        <th>Расход в период</th>
       </tr>
     </thead>
     <tbody>
-  {% for movement in movements %}
+    {% for item in items %}
       <tr>
-          <td>{{ movement.box_from }}</td>
-          <td>{{ movement.box_to }}</td>
-          <td>{{ movement.item }}</td>
-          <td>{{ movement.quantity }}</td>
-          <td>{{ movement.date }}</td>
-          <td>{% if movement.comment %} {{ movement.comment }} {% endif %}</td>
+          <td>{{ item.0 }}</td>
+          <td>{{ item.1 }}</td>
+          <td>{{ item.2 }}</td>
       </tr>
-  {% endfor %}
+    {% endfor %}
     </tbody>
   </table>
 </div>
 {% endif %}
+
 
 {% endblock %}
