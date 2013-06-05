@@ -1,12 +1,17 @@
 # -*- coding: utf8 -*-
 from django import forms
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 from django.conf import settings
 from inventory.models import Item, Box, Request, InventoryItem
 from django.contrib.auth.models import User
 
 dates_initial = (date.today() - timedelta(days=30), date.today())
 default_value = [('', '-' * 9)]
+
+
+def convert_date_to_datetime(date):
+    'convert date to datetime to show last day results'
+    return datetime(date.year, date.month, date.day, 23, 59, 59)
 
 
 class Choices:
@@ -229,6 +234,10 @@ class MovementsReportForm(forms.Form):
             return
         return Box.objects.get(pk=self.cleaned_data['box'])
 
+    def clean_date_to(self):
+        date_to = self.cleaned_data['date_to']
+        return convert_date_to_datetime(date_to)
+
 
 class RequestsListProcessedForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -243,3 +252,7 @@ class RequestsListProcessedForm(forms.Form):
         if not int(self.cleaned_data['person']):
             return
         return Box.objects.get(pk=self.cleaned_data['person'])
+
+    def clean_date_to(self):
+        date_to = self.cleaned_data['date_to']
+        return convert_date_to_datetime(date_to)

@@ -7,19 +7,14 @@ from inventory.models import (Item, Box, InventoryItem, Movement, Packet,
 from inventory.forms import (ReceiptForm, InventoryReportForm,
                              MovementsReportForm, RequestAddForm,
                              RequestsListProcessedForm, LocationForm,
-                             StatsReportForm, Choices, dates_initial)
+                             StatsReportForm, Choices, dates_initial,
+                             convert_date_to_datetime)
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
 from annoying.decorators import ajax_request, render_to
-from datetime import datetime
 
 generic_permission = 'inventory.add_item'
-
-
-def convert_date_to_datetime(date):
-    'convert date to datetime to show last day results'
-    return datetime(date.year, date.month, date.day, 23, 59, 59)
 
 
 def logout_view(request):
@@ -200,9 +195,10 @@ def reports_statistics(request):
         def get_all_items():
             def get():
                 items = []
+                datetime_to = convert_date_to_datetime(date_to)
                 requests = Request.objects.filter(request_type__pk=2,
                                                   processed=1,
-                                                  date__range=(date_from, date_to))
+                                                  date__range=(date_from, datetime_to))
                 if user is not None:
                     requests = requests.filter(user=user)
                 for request in requests:
@@ -304,7 +300,6 @@ def reports_movements(request):
 
             if box_to:
                 movements = movements.filter(box_to=box_to)
-        date_to = convert_date_to_datetime(date_to)
         movements = movements.filter(date__range=(date_from, date_to))
         return movements
     movements = None
@@ -710,7 +705,6 @@ def stocktaking_process(request, box_id):
 def requests_list_processed(request):
     def get_items(person, date_from, date_to):
         items = []
-        date_to = convert_date_to_datetime(date_to)
         for request in Request.objects.filter(person=person, processed=1, date__range=(date_from, date_to)):
             packet_items = PacketItem.objects.filter(packet=request.packet)
             for packet_item in packet_items:
