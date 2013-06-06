@@ -133,7 +133,7 @@ def add_location(request):
     message = None
     form = LocationForm(request.POST or None)
     if form.is_valid():
-        Box(box_type_pk=6, name=form.cleaned_data['name']).save()
+        Box(box_type_id=6, name=form.cleaned_data['name']).save()
         message = 'Узел добавлен'
         form = LocationForm()
     return {'form': form,

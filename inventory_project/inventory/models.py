@@ -110,7 +110,7 @@ class Request(models.Model):
     request_type = models.ForeignKey(RequestType, verbose_name='тип заявки')
     user = models.ForeignKey(User, verbose_name='пользователь')
     person = models.ForeignKey(Box, verbose_name='лицо')
-    packet = models.ForeignKey(Packet, verbose_name='пакет')
+    packet = models.ForeignKey(Packet, verbose_name='пакет', unique=True)
     date = models.DateTimeField('дата/время', auto_now_add=True)
     processed = models.BooleanField('обработано')
 
