@@ -6,6 +6,7 @@ from inventory.models import Item, Box, Request, InventoryItem
 from django.contrib.auth.models import User
 
 dates_initial = (date.today() - timedelta(days=30), date.today())
+dates_initial_stats = (datetime.strptime(settings.START_DATE, settings.FORMAT_DATE), date.today())
 default_value = [('', '-' * 9)]
 
 
@@ -160,18 +161,16 @@ class InventoryReportForm(forms.Form):
         return Box.objects.get(pk=self.cleaned_data['location'])
 
 
-def create_form_date_field(date_type):
-    if date_type == 'from':
-        label = 'От'
-        initial_date = dates_initial[0]
-    else:
-        label = 'До'
-        initial_date = dates_initial[1]
-    widget_attrs = {'required': '', 'pattern': '^\d{2}\.\d{2}\.\d{4}$'}
-    return forms.DateField(label=label,
-                           initial=initial_date,
-                           widget=forms.DateInput(attrs=widget_attrs, format=settings.FORMAT_DATE),
-                           input_formats=(settings.FORMAT_DATE,))
+def create_form_date_fields(dates):
+    def create_form_date_field(label, initial_date):
+        widget_attrs = {'required': '', 'pattern': '^\d{2}\.\d{2}\.\d{4}$'}
+        return forms.DateField(label=label,
+                               initial=initial_date,
+                               widget=forms.DateInput(attrs=widget_attrs, format=settings.FORMAT_DATE),
+                               input_formats=(settings.FORMAT_DATE,))
+    date_from = create_form_date_field('От', dates[0])
+    date_to = create_form_date_field('До', dates[1])
+    return (date_from, date_to)
 
 
 class StatsReportForm(forms.Form):
@@ -183,11 +182,11 @@ class StatsReportForm(forms.Form):
 
     user = forms.ChoiceField(label='Пользователь', required=False)
     period = forms.ChoiceField(label='Период', required=True, choices=[
+        (7, 'неделя'),
         (30, 'месяц'),
         (180, 'полгода')]
     )
-    date_from = create_form_date_field('from')
-    date_to = create_form_date_field('to')
+    date_from, date_to = create_form_date_fields(dates_initial_stats)
 
     def clean_user(self):
         if not self.cleaned_data['user']:
@@ -211,8 +210,7 @@ class MovementsReportForm(forms.Form):
     box_from = forms.ChoiceField(label='Откуда', required=False)
     box_to = forms.ChoiceField(label='Куда', required=False)
     item = forms.ChoiceField(label='Наименование', required=False)
-    date_from = create_form_date_field('from')
-    date_to = create_form_date_field('to')
+    date_from, date_to = create_form_date_fields(dates_initial)
 
     def clean_item(self):
         if not int(self.cleaned_data['item']):
@@ -245,8 +243,7 @@ class RequestsListProcessedForm(forms.Form):
         self.fields['person'].choices = Choices().persons_with_no_default_value
 
     person = forms.ChoiceField(label='Лицо', widget=forms.Select(attrs={'required': ''}))
-    date_from = create_form_date_field('from')
-    date_to = create_form_date_field('to')
+    date_from, date_to = create_form_date_fields(dates_initial)
 
     def clean_person(self):
         if not int(self.cleaned_data['person']):

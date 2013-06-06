@@ -8,7 +8,7 @@ from inventory.forms import (ReceiptForm, InventoryReportForm,
                              MovementsReportForm, RequestAddForm,
                              RequestsListProcessedForm, LocationForm,
                              StatsReportForm, Choices, dates_initial,
-                             convert_date_to_datetime)
+                             dates_initial_stats, convert_date_to_datetime)
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
@@ -248,7 +248,7 @@ def reports_statistics(request):
 
         items = get_items(user, period, date_from, date_to)
     # returns dates_initial because it's more convinient for js form reset
-    return {'form': form, 'items': items, 'dates_initial': get_dates_initial()}
+    return {'form': form, 'items': items, 'dates_initial': get_dates_initial(dates_initial_stats)}
 
 
 @render_to('reports/inventory-storage.html')
@@ -267,12 +267,12 @@ def reports_inventory_storage(request):
     return {'items': items}
 
 
-def get_dates_initial():
+def get_dates_initial(dates):
     """
     Returns formatted list of initial dates
     Returns: list of datetime objects
     """
-    return [date.strftime(settings.FORMAT_DATE) for date in dates_initial]
+    return [date.strftime(settings.FORMAT_DATE) for date in dates]
 
 
 @render_to('reports/movements.html')
@@ -318,7 +318,7 @@ def reports_movements(request):
     # returns dates_initial variable because it's more convinient for js form reset
     return {'form': form,
             'movements': movements,
-            'dates_initial': get_dates_initial()}
+            'dates_initial': get_dates_initial(dates_initial)}
 
 
 class RequestData:
@@ -718,4 +718,4 @@ def requests_list_processed(request):
         date_to = form.cleaned_data['date_to']
         items = get_items(person, date_from, date_to)
     # returns dates_initial because it's more convinient for js form reset
-    return {'form': form, 'items': items, 'dates_initial': get_dates_initial()}
+    return {'form': form, 'items': items, 'dates_initial': get_dates_initial(dates_initial)}
