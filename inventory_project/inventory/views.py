@@ -202,7 +202,7 @@ def reports_statistics(request):
                 if user is not None:
                     requests = requests.filter(user=user)
                 for request in requests:
-                    packet_items = PacketItem.objects.filter(packet=request.packet)
+                    packet_items = PacketItem.objects.filter(packet=request.packet).exclude(box_id=1)
                     for packet_item in packet_items:
                         items.append((packet_item.item, packet_item.quantity))
                 return items
@@ -385,6 +385,11 @@ def requests_add_expense(request):
     return requests_add(request, 2)
 
 
+def clean_json(data):
+    data = data.replace('\t', ' ')
+    return json.loads(data)
+
+
 @ajax_request
 def ajax_check_availability_receipt(request):
     def sum_duplicates(items):
@@ -439,7 +444,7 @@ def ajax_check_availability_receipt(request):
     if request.is_ajax() and request.method == 'POST':
         POST = request.POST
         if 'item_data' in POST:
-            items = sum_duplicates(json.loads(POST.get('item_data')))
+            items = sum_duplicates(clean_json(POST.get('item_data')))
             is_process_form = json.loads(POST.get('is_process_form'))
             status, message = is_enough_items_in_inventory(items, is_process_form)
             return {'status': status, 'message': message}
@@ -480,7 +485,7 @@ def ajax_check_availability_expense(request):
     if request.is_ajax() and request.method == 'POST':
         POST = request.POST
         if 'item_data' in POST and 'person' in POST:
-            items_request = json.loads(POST.get('item_data'))
+            items_request = clean_json(POST.get('item_data'))
             if required_comments_present(items_request):
                 items = sum_duplicates(items_request)
                 person = Box.objects.get(pk=POST.get('person'))
@@ -631,8 +636,11 @@ def stocktaking_list(request):
 @permission_required(generic_permission)
 @login_required
 def stocktaking_process(request, box_id):
+    def get_all_item_names_from_box():
+        return InventoryItem.objects.filter(box=box_id).order_by('item__name')
+
     def get_items_in_box():
-        items = InventoryItem.objects.filter(box=box_id).order_by('item__name')
+        items = get_all_item_names_from_box()
         output = []
         for item in items:
             output.append((item.item.pk, item.quantity))
@@ -648,7 +656,7 @@ def stocktaking_process(request, box_id):
     def process_stocktaking(new_item_data):
         def get_differences_between_new_and_old_data():
             def get_items_in_box():
-                items = InventoryItem.objects.filter(box=box_id)
+                items = get_all_item_names_from_box()
                 output = {}
                 for item in items:
                     output[str(item.item.pk)] = item.quantity
