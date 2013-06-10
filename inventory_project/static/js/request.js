@@ -143,7 +143,7 @@ function ajax_create_or_update_packet(packet_id) {
   return new_packet_id;
 }
 
-function create_print_area() {
+function create_print_area(request_person) {
   function get_current_datetime() {
     var current_date = new Date();
     var day = current_date.getDate();
@@ -169,6 +169,6 @@ function create_print_area() {
     var id = item_ids[i];
     output += '<tr><td>' + $('#box' + id).find(":selected").text() + '</td><td>' + $('#item_name' + id).find(":selected").text() + '</td><td>' + $('#quantity' + id).val() + '</td><td>' + $('#comment' + id).val() + '</td></tr>';
   }
-  output += '</tbody></table><br><br>Дата/Время: ' + date + '<br>Тип заявки: ' + request_type_text + '<br>Выписано на: ' + $('#id_person').find(":selected").text() + '<br><br>' + user + ' _______________________________<br>Гуров А. С. _______________________________';
+  output += '</tbody></table><br><br>Дата/Время: ' + date + '<br>Тип заявки: ' + request_type_text + '<br>Лицо: ' + request_person + '<br><br>' + user + ' _______________________________<br>Гуров А. С. _______________________________';
   $('#to-print').html(output);
 }

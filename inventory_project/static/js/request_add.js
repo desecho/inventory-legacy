@@ -35,7 +35,7 @@ function submit_form() {
 
 function print_request() {
   if (validate_form()) {
-    create_print_area();
+    create_print_area($('#id_person').find(":selected").text());
     window.print();
   }
 }
