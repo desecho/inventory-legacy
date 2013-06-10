@@ -152,7 +152,7 @@ def ajax_add_location(request):
         POST = request.POST
         if 'location' in POST:
             location = POST.get('location')
-            box = Box(box_type_pk=6, name=location)
+            box = Box(box_type_id=6, name=location)
             box.save()
             return {'location': location,
                     'id': box.pk}
