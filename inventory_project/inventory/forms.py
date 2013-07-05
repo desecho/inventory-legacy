@@ -5,8 +5,13 @@ from django.conf import settings
 from inventory.models import Item, Box, Request, InventoryItem
 from django.contrib.auth.models import User
 
-dates_initial = (date.today() - timedelta(days=30), date.today())
-dates_initial_stats = (datetime.strptime(settings.START_DATE, settings.FORMAT_DATE), date.today())
+
+def load_dates_initial():
+    return date.today() - timedelta(days=30), date.today()
+
+
+def load_dates_initial_stats():
+    return datetime.strptime(settings.START_DATE, settings.FORMAT_DATE), date.today()
 default_value = [('', '-' * 9)]
 
 
@@ -186,7 +191,7 @@ class StatsReportForm(forms.Form):
         (30, 'месяц'),
         (180, 'полгода')]
     )
-    date_from, date_to = create_form_date_fields(dates_initial_stats)
+    date_from, date_to = create_form_date_fields(load_dates_initial_stats())
 
     def clean_user(self):
         if not self.cleaned_data['user']:
@@ -210,7 +215,7 @@ class MovementsReportForm(forms.Form):
     box_from = forms.ChoiceField(label='Откуда', required=False)
     box_to = forms.ChoiceField(label='Куда', required=False)
     item = forms.ChoiceField(label='Наименование', required=False)
-    date_from, date_to = create_form_date_fields(dates_initial)
+    date_from, date_to = create_form_date_fields(load_dates_initial())
 
     def clean_item(self):
         if not int(self.cleaned_data['item']):
@@ -243,7 +248,7 @@ class RequestsListProcessedForm(forms.Form):
         self.fields['person'].choices = Choices().persons_with_no_default_value
 
     person = forms.ChoiceField(label='Лицо', widget=forms.Select(attrs={'required': ''}))
-    date_from, date_to = create_form_date_fields(dates_initial)
+    date_from, date_to = create_form_date_fields(load_dates_initial())
 
     def clean_person(self):
         if not int(self.cleaned_data['person']):
