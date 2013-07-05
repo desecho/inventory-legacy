@@ -8,6 +8,7 @@ inventory_project/inventory_project/secret.py
 *.so
 
 # Packages
+*.DS_STORE
 *.egg
 *.egg-info
 dist
