@@ -1,6 +1,8 @@
 # -*- coding: utf8 -*-
 import json
 import chromelogger as console
+import PyICU
+from operator import itemgetter
 from django.shortcuts import redirect
 from inventory.models import (Item, Box, InventoryItem, Movement, Packet,
                               PacketItem, Request, RequestType)
@@ -226,13 +228,18 @@ def reports_statistics(request):
                 qty = total_qty / float(delta) * period
                 return round(qty, 2)
 
+            def sort(output):
+                collator = PyICU.Collator.createInstance(PyICU.Locale('ru_RU.UTF-8'))
+                output = sorted(output, key=itemgetter(0), cmp=collator.compare)
+                return output
+
             delta = (date_to - date_from).days
             output = []
-            for name in items:
-                total_qty = items[name]
-                data = (name, total_qty, get_period_qty())
+            for item in items:
+                total_qty = items[item]
+                data = (item.name, total_qty, get_period_qty())
                 output.append(data)
-            return output
+            return sort(output)
 
         items = get_all_items()
         items = get_stats()

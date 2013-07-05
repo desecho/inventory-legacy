@@ -9,6 +9,7 @@ You can create boxes of type 5 and 6 by using administration panel.
 * [Django v1.5](http://djangoproject.com)
 * [django-annoying v0.7.7+](https://github.com/skorokithakis/django-annoying)
 * [django-bootstrap-toolkit v2.8.0+](https://github.com/dyve/django-bootstrap-toolkit)
+* [PyICU 1.5](https://pypi.python.org/pypi/PyICU)
 
 ##Used Javascript libraries
 * [Bootstrap v2.3.1](http://twitter.github.com/bootstrap/)
