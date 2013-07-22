@@ -266,7 +266,7 @@ def reports_inventory_storage(request):
     Returns: list of tuples:
         (string, int, int) - (item name, item quantity, item minimal quantity)
     """
-    items = Item.objects.filter(deleted=False)
+    items = Item.objects.filter(deleted=False).order_by('name')
     items = [(item.name, get_quantity_in_inventory(1, item), item.minimal_quantity_in_storage)
              for item in items
              if not is_enough_item_in_inventory(1, item, item.minimal_quantity_in_storage)
