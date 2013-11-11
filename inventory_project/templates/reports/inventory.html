@@ -43,6 +43,13 @@
           <td>{{ item.quantity }}</td>
       </tr>
     {% endfor %}
+    {% for box in empty_boxes %}
+      <tr>
+          <td>{{ box }}</td>
+          <td></td>
+          <td></td>
+      </tr>
+    {% endfor %}
     </tbody>
   </table>
 </div>
