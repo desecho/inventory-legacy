@@ -155,10 +155,12 @@ class InventoryReportForm(forms.Form):
             self.fields['item'].choices = choices.output_items()
             self.fields['person'].choices = choices.output_persons()
             self.fields['location'].choices = choices.output_storage_with_locations()
+            self.fields['network'].choices = [(0, '')] + list(Network.objects.all().values_list())
 
     item = forms.ChoiceField(label='Наименование', required=False)
     person = forms.ChoiceField(label='Лицо', required=False)
     location = forms.ChoiceField(label='Узел', required=False)
+    network = forms.ChoiceField(label='Сеть', required=False)
 
     def clean_item(self):
         if not int(self.cleaned_data['item']):
@@ -174,6 +176,12 @@ class InventoryReportForm(forms.Form):
         if not int(self.cleaned_data['location']):
             return
         return Box.objects.get(pk=self.cleaned_data['location'])
+
+    def clean_network(self):
+        if not int(self.cleaned_data['network']):
+            return
+        return Network.objects.get(pk=self.cleaned_data['network'])
+
 
 
 def create_form_date_fields(dates):
@@ -226,6 +234,7 @@ class MovementsReportForm(forms.Form):
     box_to = forms.ChoiceField(label='Куда', required=False)
     item = forms.ChoiceField(label='Наименование', required=False)
     date_from, date_to = create_form_date_fields(load_dates_initial())
+    comment_sort = forms.BooleanField(label='Сортировка по комментарию', required=False)
 
     def clean_item(self):
         if not int(self.cleaned_data['item']):

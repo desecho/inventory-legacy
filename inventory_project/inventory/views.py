@@ -178,7 +178,7 @@ def ajax_add_location(request):
 @render_to('reports/inventory.html')
 @login_required
 def reports_inventory(request):
-    def filter_results(item, person, location):
+    def filter_results(item, person, location, network):
         """
         Args:
             item: Item
@@ -193,6 +193,8 @@ def reports_inventory(request):
             items = items.filter(box=person)
         if location:
             items = items.filter(box=location)
+        if network:
+            items = items.filter(box__network=network)
         return items
 
     items = None
@@ -200,7 +202,9 @@ def reports_inventory(request):
     if form.is_valid():
         items = filter_results(form.cleaned_data['item'],
                                form.cleaned_data['person'],
-                               form.cleaned_data['location'])
+                               form.cleaned_data['location'],
+                               form.cleaned_data['network'],
+                               )
         items = items.order_by('box__box_type', 'box__name', 'item__name')
     return {'form': form, 'items': items}
 
@@ -333,10 +337,12 @@ def reports_movements(request):
                                    form.cleaned_data['box_to'],
                                    form.cleaned_data['date_from'],
                                    form.cleaned_data['date_to'])
-        movements = movements.order_by('date', 'box_from__box_type',
-                                       'box_to__box_type',
-                                       'box_from__name', 'box_to__name',
-                                       'item__name')
+
+        sort_order = ['date', 'box_from__box_type', 'box_to__box_type',
+                      'box_from__name', 'box_to__name', 'item__name']
+        if form.cleaned_data['comment_sort']:
+            sort_order.insert(0, 'comment')
+        movements = movements.order_by(*sort_order)
     # returns dates_initial variable because it's more convinient for js form reset
     return {'form': form,
             'movements': movements,
