@@ -2,7 +2,7 @@
 from django import forms
 from datetime import timedelta, date, datetime
 from django.conf import settings
-from inventory.models import Item, Box, Request, InventoryItem
+from inventory.models import Item, Box, Request, InventoryItem, Network
 from django.contrib.auth.models import User
 
 
@@ -136,6 +136,16 @@ class LocationForm(forms.ModelForm):
     class Meta:
         model = Box
         exclude = ('box_type', 'deleted')
+
+
+class NetworkForm(forms.ModelForm):
+    name = forms.CharField(label="Название", widget=forms.TextInput(attrs={'required': '', 'autofocus': ''}))
+
+    def clean_name(self):
+        return self.cleaned_data['name'].strip()
+
+    class Meta:
+        model = Network
 
 
 class InventoryReportForm(forms.Form):

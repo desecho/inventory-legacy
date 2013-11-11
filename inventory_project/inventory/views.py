@@ -5,12 +5,13 @@ import PyICU
 from operator import itemgetter
 from django.shortcuts import redirect
 from inventory.models import (Item, Box, InventoryItem, Movement, Packet,
-                              PacketItem, Request, RequestType)
+                              PacketItem, Request, RequestType, Network)
 from inventory.forms import (ReceiptForm, InventoryReportForm,
                              MovementsReportForm, RequestAddForm,
                              RequestsListProcessedForm, LocationForm,
-                             StatsReportForm, Choices, load_dates_initial,
-                             load_dates_initial_stats, convert_date_to_datetime)
+                             StatsReportForm, Choices, NetworkForm,
+                             load_dates_initial, load_dates_initial_stats,
+                             convert_date_to_datetime)
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
@@ -130,7 +131,7 @@ def receipt(request):
 
 
 @render_to('add-location.html')
-@login_required
+@permission_required(generic_permission)
 def add_location(request):
     message = None
     form = LocationForm(request.POST or None)
@@ -138,6 +139,20 @@ def add_location(request):
         Box(box_type_id=6, name=form.cleaned_data['name']).save()
         message = 'Узел добавлен'
         form = LocationForm()
+    return {'form': form,
+            'message': message,
+            'message_status': 1}
+
+
+@render_to('add-network.html')
+@permission_required(generic_permission)
+def add_network(request):
+    message = None
+    form = NetworkForm(request.POST or None)
+    if form.is_valid():
+        Network(name=form.cleaned_data['name']).save()
+        message = 'Сеть добавлена'
+        form = NetworkForm()
     return {'form': form,
             'message': message,
             'message_status': 1}

@@ -28,9 +28,21 @@ class BoxType(models.Model):
         return self.name
 
 
+class Network(models.Model):
+    name = models.CharField('название', unique=True, max_length=255)
+
+    class Meta:
+        verbose_name = 'сеть'
+        verbose_name_plural = 'сети'
+
+    def __unicode__(self):
+        return self.name
+
+
 class Box(models.Model):
     name = models.CharField('название', unique=True, max_length=255)
     box_type = models.ForeignKey(BoxType, verbose_name='тип коробки')
+    network = models.ForeignKey(Network, default=1, verbose_name='сеть')
     deleted = models.BooleanField('удален')
 
     class Meta:
