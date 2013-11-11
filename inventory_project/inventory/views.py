@@ -198,6 +198,7 @@ def reports_inventory(request):
         return items
 
     items = None
+    empty_boxes = None
     form = InventoryReportForm(request.POST or None)
     if form.is_valid():
         items = filter_results(form.cleaned_data['item'],
@@ -206,11 +207,10 @@ def reports_inventory(request):
                                form.cleaned_data['network'],
                                )
         items = items.order_by('box__box_type', 'box__name', 'item__name')
-    empty_boxes = None
-    if form.cleaned_data['network']:
-        network_boxes = Box.objects.filter(network=form.cleaned_data['network']).values_list('pk')
-        items_boxes = [x.box.pk for x in items]
-        empty_boxes = [Box.objects.get(pk=x[0]) for x in network_boxes if x[0] not in items_boxes]
+        if form.cleaned_data['network']:
+            network_boxes = Box.objects.filter(network=form.cleaned_data['network']).values_list('pk')
+            items_boxes = [x.box.pk for x in items]
+            empty_boxes = [Box.objects.get(pk=x[0]) for x in network_boxes if x[0] not in items_boxes]
     return {'form': form, 'items': items, 'empty_boxes': empty_boxes}
 
 
