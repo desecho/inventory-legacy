@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 import json
+from collections import defaultdict
 import chromelogger as console
 import PyICU
 from operator import itemgetter
@@ -362,18 +363,23 @@ class RequestData:
     def get_item_names_in_boxes_json(self):
         """
         Returns string json - list of tuples:
-            (int, (int, string)) - (Box pk, (Item pk, Item name))
+            (int, [(int, string)]) - (Box pk, [(Item pk, Item name)])
         """
-        if self.request_type == 1:  # in
-            boxes = (Box.objects.filter(box_type=1) |  # storage
-                     Box.objects.filter(box_type=6))  # locations
-        else:
-            boxes = Box.objects.filter(box_type=5)  # persons
-        item_names_in_boxes = []
-        for box in boxes:
-            inventory_items = InventoryItem.objects.filter(box=box).order_by('item__name')
-            item_names_in_box = [(item.item.pk, item.item.name) for item in inventory_items]
-            item_names_in_boxes.append((box.pk, item_names_in_box))
+        def get_boxes_ids():
+            if self.request_type == 1:  # in
+                boxes = (Box.objects.filter(box_type=1) |  # storage
+                         Box.objects.filter(box_type=6))  # locations
+            else:
+                boxes = Box.objects.filter(box_type=5)  # persons
+            return boxes.values_list('pk', flat=True)
+
+        inventory_items = InventoryItem.objects.filter(box__in=get_boxes_ids()). \
+            order_by('item__name').values_list('box__pk', 'item__pk', 'item__name')
+        item_names_in_boxes = defaultdict(list)
+        for box_id, item_id, item_name in inventory_items:
+            item_names_in_boxes[box_id].append((item_id, item_name))
+        item_names_in_boxes = [(box_id, item_names_in_boxes[box_id]) \
+            for box_id in item_names_in_boxes]
         return json.dumps(item_names_in_boxes)
 
     def get_choices_json(self):
