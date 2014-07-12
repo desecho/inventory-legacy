@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 import json
 from collections import defaultdict
-import chromelogger as console
+#import chromelogger as console
 import PyICU
 from operator import itemgetter
 from django.shortcuts import redirect
@@ -92,7 +92,8 @@ def move_item(box_from, box_to, item, quantity, comment):
         else:
             inventory.save()
 
-    if is_box_from_type_receipt_or_stocktaking() or is_enough_item_in_inventory(box_from, item, quantity):
+    if (is_box_from_type_receipt_or_stocktaking() or
+            is_enough_item_in_inventory(box_from, item, quantity)):
         if not is_box_from_type_receipt_or_stocktaking():
             remove_items_from_box_in_inventory(box_from)
         if box_to.box_type.pk not in [2, 4]:  # expense or stocktaking
@@ -349,7 +350,9 @@ def reports_movements(request):
         if form.cleaned_data['comment_sort']:
             sort_order.insert(0, 'comment')
         movements = movements.order_by(*sort_order)
-    # returns dates_initial variable because it's more convinient for js form reset
+    '''returns dates_initial variable because it's more convinient for js form
+       reset
+    '''
     return {'form': form,
             'movements': movements,
             'dates_initial': get_dates_initial(load_dates_initial())}
@@ -373,13 +376,14 @@ class RequestData:
                 boxes = Box.objects.filter(box_type=5)  # persons
             return boxes.values_list('pk', flat=True)
 
-        inventory_items = InventoryItem.objects.filter(box__in=get_boxes_ids()). \
-            order_by('item__name').values_list('box__pk', 'item__pk', 'item__name')
+        inventory_items = InventoryItem.objects.filter(
+            box__in=get_boxes_ids()).order_by('item__name').values_list(
+                'box__pk', 'item__pk', 'item__name')
         item_names_in_boxes = defaultdict(list)
         for box_id, item_id, item_name in inventory_items:
             item_names_in_boxes[box_id].append((item_id, item_name))
-        item_names_in_boxes = [(box_id, item_names_in_boxes[box_id]) \
-            for box_id in item_names_in_boxes]
+        item_names_in_boxes = [(box_id, item_names_in_boxes[box_id])
+                               for box_id in item_names_in_boxes]
         return json.dumps(item_names_in_boxes)
 
     def get_choices_json(self):
@@ -463,13 +467,15 @@ def ajax_check_availability_receipt(request):
             box = Box.objects.get(pk=box_id)
             item = Item.objects.get(pk=item_id)
             quantity = items_request[item_request]
-            item_already_requested = items_already_requested.get((box_id, item_id))
+            item_already_requested = items_already_requested.get(
+                (box_id, item_id))
             if item_already_requested:
                 already_requested_text = u'уже выписано %d, ' % item_already_requested
             else:
                 item_already_requested = 0
                 already_requested_text = ''
-            if not is_enough_item_in_inventory(box, item, quantity + item_already_requested):
+            if not is_enough_item_in_inventory(
+                    box, item, quantity + item_already_requested):
                 message = (u'Недостаточно "%s" в "%s" (необходимо %d, %sв наличие %d)' %
                            (item.name,
                             box.name,
@@ -485,7 +491,8 @@ def ajax_check_availability_receipt(request):
         if 'item_data' in POST:
             items = sum_duplicates(clean_json(POST.get('item_data')))
             is_process_form = json.loads(POST.get('is_process_form'))
-            status, message = is_enough_items_in_inventory(items, is_process_form)
+            status, message = is_enough_items_in_inventory(
+                items, is_process_form)
             return {'status': status, 'message': message}
 
 
@@ -634,7 +641,8 @@ def requests_process(request, id):
                     one administrator is going to work with this. If multiple
                     admins suddenly emerge this issue will have to be addressed.
                 """
-                move_item(box_from, box_to, item.item, item.quantity, item.comment)
+                move_item(box_from, box_to, item.item, item.quantity,
+                          item.comment)
         process_movements()
         mark_request_as_processed()
 
@@ -717,7 +725,8 @@ def stocktaking_process(request, box_id):
                     differences.append((item, action, value, new_item_comment))
             for item in new_item_data:
                 if item not in items_in_box:
-                    differences.append((item, 1, new_item_data[item][0], new_item_data[item][1]))
+                    differences.append((item, 1, new_item_data[item][0],
+                                        new_item_data[item][1]))
             return differences
 
         def process(differences):
@@ -752,7 +761,8 @@ def stocktaking_process(request, box_id):
 def requests_list_processed(request):
     def get_items(person, date_from, date_to):
         items = []
-        for request in Request.objects.filter(person=person, processed=1, date__range=(date_from, date_to)):
+        for request in Request.objects.filter(person=person, processed=1,
+                                              date__range=(date_from, date_to)):
             packet_items = PacketItem.objects.filter(packet=request.packet)
             for packet_item in packet_items:
                 items.append({'date': request.date, 'item': packet_item})
@@ -765,4 +775,5 @@ def requests_list_processed(request):
         date_to = form.cleaned_data['date_to']
         items = get_items(person, date_from, date_to)
     # returns dates_initial because it's more convinient for js form reset
-    return {'form': form, 'items': items, 'dates_initial': get_dates_initial(load_dates_initial())}
+    return {'form': form, 'items': items,
+            'dates_initial': get_dates_initial(load_dates_initial())}

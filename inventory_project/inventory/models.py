@@ -68,12 +68,15 @@ class InventoryItem(models.Model):
 
 
 class Movement(models.Model):
-    box_from = models.ForeignKey(Box, related_name='box_from', verbose_name='коробка от')
-    box_to = models.ForeignKey(Box, related_name='box_to', verbose_name='коробка к')
+    box_from = models.ForeignKey(Box, related_name='box_from',
+                                 verbose_name='коробка от')
+    box_to = models.ForeignKey(Box, related_name='box_to',
+                               verbose_name='коробка к')
     item = models.ForeignKey(Item, verbose_name='наименование')
     quantity = models.IntegerField('количество')
     date = models.DateTimeField('дата', auto_now_add=True)
-    comment = models.CharField('комментарий', max_length=255, null=True, blank=True)
+    comment = models.CharField('комментарий', max_length=255, null=True,
+                               blank=True)
 
     class Meta:
         verbose_name = 'перемещение'
@@ -97,7 +100,8 @@ class PacketItem(models.Model):
     box = models.ForeignKey(Box, verbose_name='коробка')
     item = models.ForeignKey(Item, verbose_name='наименование')
     quantity = models.IntegerField('количество')
-    comment = models.CharField('комментарий', max_length=255, null=True, blank=True)
+    comment = models.CharField('комментарий', max_length=255, null=True,
+                               blank=True)
 
     class Meta:
         verbose_name = 'содержимое пакета'

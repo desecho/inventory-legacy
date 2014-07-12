@@ -1,6 +1,7 @@
 #Inventory
 
-The web application to manage storage. The interface is in Russian.
+The web application on Python2/Django/jQuery to manage inventory. 
+It’s used by one of the local ISP companies in Russia. The interface is in Russian.
 You can create boxes of type 5 and 6 by using administration panel.
 
 ##Required packages

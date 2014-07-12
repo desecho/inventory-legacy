@@ -11,7 +11,8 @@ def load_dates_initial():
 
 
 def load_dates_initial_stats():
-    return datetime.strptime(settings.START_DATE, settings.FORMAT_DATE), date.today()
+    return datetime.strptime(
+        settings.START_DATE, settings.FORMAT_DATE), date.today()
 default_value = [('', '-' * 9)]
 
 
@@ -31,8 +32,10 @@ class Choices:
         self.expense = self.create_box_list(2)
         self.receipt = self.create_box_list(3)
         self.storage_with_locations = self.storage + self.locations
-        self.expense_and_storage_with_locations = self.expense + self.storage + self.locations  # for views
-        self.basic_set = self.storage + self.persons + self.locations + self.correction
+        self.expense_and_storage_with_locations = (self.expense + self.storage +
+                                                   self.locations)  # for views
+        self.basic_set = (self.storage + self.persons + self.locations +
+                          self.correction)
         self.boxes_from = self.receipt + self.basic_set
         self.boxes_to = self.expense + self.basic_set
         self.boxes = self.receipt + self.expense + self.basic_set
@@ -101,7 +104,8 @@ class RequestAddForm(forms.ModelForm):
 
 class ReceiptForm(forms.ModelForm):
     item = forms.CharField(label='Наименование',
-                           widget=forms.TextInput(attrs={'required': '', 'autofocus': ''}))
+                           widget=forms.TextInput(
+                               attrs={'required': '', 'autofocus': ''}))
     comment = forms.CharField(label='Комментарий', required=False)
 
     def clean_item(self):
@@ -127,8 +131,8 @@ class ReceiptForm(forms.ModelForm):
 
 
 class LocationForm(forms.ModelForm):
-    name = forms.CharField(label='Адрес',
-                           widget=forms.TextInput(attrs={'required': '', 'autofocus': ''}))
+    name = forms.CharField(label='Адрес', widget=forms.TextInput(
+        attrs={'required': '', 'autofocus': ''}))
 
     def clean_name(self):
         return self.cleaned_data['name'].strip()
@@ -139,7 +143,8 @@ class LocationForm(forms.ModelForm):
 
 
 class NetworkForm(forms.ModelForm):
-    name = forms.CharField(label="Название", widget=forms.TextInput(attrs={'required': '', 'autofocus': ''}))
+    name = forms.CharField(label="Название", widget=forms.TextInput(
+        attrs={'required': '', 'autofocus': ''}))
 
     def clean_name(self):
         return self.cleaned_data['name'].strip()
@@ -183,13 +188,14 @@ class InventoryReportForm(forms.Form):
         return Network.objects.get(pk=self.cleaned_data['network'])
 
 
-
 def create_form_date_fields(dates):
     def create_form_date_field(label, initial_date):
         widget_attrs = {'required': '', 'pattern': '^\d{2}\.\d{2}\.\d{4}$'}
         return forms.DateField(label=label,
                                initial=initial_date,
-                               widget=forms.DateInput(attrs=widget_attrs, format=settings.FORMAT_DATE),
+                               widget=forms.DateInput(
+                                   attrs=widget_attrs,
+                                   format=settings.FORMAT_DATE),
                                input_formats=(settings.FORMAT_DATE,))
     date_from = create_form_date_field('От', dates[0])
     date_to = create_form_date_field('До', dates[1])
@@ -234,7 +240,8 @@ class MovementsReportForm(forms.Form):
     box_to = forms.ChoiceField(label='Куда', required=False)
     item = forms.ChoiceField(label='Наименование', required=False)
     date_from, date_to = create_form_date_fields(load_dates_initial())
-    comment_sort = forms.BooleanField(label='Сортировка по комментарию', required=False)
+    comment_sort = forms.BooleanField(label='Сортировка по комментарию',
+                                      required=False)
 
     def clean_item(self):
         if not int(self.cleaned_data['item']):
@@ -266,7 +273,8 @@ class RequestsListProcessedForm(forms.Form):
         super(RequestsListProcessedForm, self).__init__(*args, **kwargs)
         self.fields['person'].choices = Choices().persons_with_no_default_value
 
-    person = forms.ChoiceField(label='Лицо', widget=forms.Select(attrs={'required': ''}))
+    person = forms.ChoiceField(label='Лицо', widget=forms.Select(
+        attrs={'required': ''}))
     date_from, date_to = create_form_date_fields(load_dates_initial())
 
     def clean_person(self):
