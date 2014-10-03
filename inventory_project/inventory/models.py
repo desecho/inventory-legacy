@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 class Item(models.Model):
     name = models.CharField('название', unique=True, max_length=255)
+    is_permanent = models.BooleanField('является постоянным', default=False)
     minimal_quantity_in_storage = models.IntegerField(
         'минимальное необходимое количество на складе', blank=True, default=0)
     deleted = models.BooleanField('удален')

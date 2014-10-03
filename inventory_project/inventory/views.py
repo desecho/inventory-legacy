@@ -180,7 +180,7 @@ def ajax_add_location(request):
 @render_to('reports/inventory.html')
 @login_required
 def reports_inventory(request):
-    def filter_results(item, person, location, network):
+    def filter_results(item, item_is_permanent, person, location, network):
         """
         Args:
             item: Item
@@ -191,6 +191,8 @@ def reports_inventory(request):
         items = InventoryItem.objects.all()
         if item:
             items = items.filter(item=item)
+        if item_is_permanent is not None:
+            items = items.filter(item__is_permanent=item_is_permanent)
         if person:
             items = items.filter(box=person)
         if location:
@@ -204,6 +206,7 @@ def reports_inventory(request):
     form = InventoryReportForm(request.POST or None)
     if form.is_valid():
         items = filter_results(form.cleaned_data['item'],
+                               form.cleaned_data['item_is_permanent'],
                                form.cleaned_data['person'],
                                form.cleaned_data['location'],
                                form.cleaned_data['network'],

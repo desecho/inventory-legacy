@@ -3,7 +3,7 @@ from django.contrib import admin
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ['name', 'minimal_quantity_in_storage', 'deleted']
+    list_display = ['name', 'minimal_quantity_in_storage', 'is_permanent', 'deleted']
     ordering = ['name']
 
 

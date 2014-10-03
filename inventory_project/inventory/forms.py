@@ -154,15 +154,24 @@ class NetworkForm(forms.ModelForm):
 
 
 class InventoryReportForm(forms.Form):
+    IS_PERMANENT_NOT_SELECTED = 0
+    IS_PERMANENT_YES = 1
+    IS_PERMANENT_NO = 2
+
     def __init__(self, *args, **kwargs):
             super(InventoryReportForm, self).__init__(*args, **kwargs)
             choices = Choices()
             self.fields['item'].choices = choices.output_items()
+            self.fields['item_is_permanent'].choices = (
+                (self.IS_PERMANENT_NOT_SELECTED, ''),
+                (self.IS_PERMANENT_NO, 'Нет'),
+                (self.IS_PERMANENT_YES, 'Да'))
             self.fields['person'].choices = choices.output_persons()
             self.fields['location'].choices = choices.output_storage_with_locations()
             self.fields['network'].choices = [(0, '')] + list(Network.objects.all().values_list())
 
     item = forms.ChoiceField(label='Наименование', required=False)
+    item_is_permanent = forms.ChoiceField(label='Наименование является постоянным', required=False)
     person = forms.ChoiceField(label='Лицо', required=False)
     location = forms.ChoiceField(label='Узел', required=False)
     network = forms.ChoiceField(label='Сеть', required=False)
@@ -171,6 +180,13 @@ class InventoryReportForm(forms.Form):
         if not int(self.cleaned_data['item']):
             return
         return Item.objects.get(pk=self.cleaned_data['item'])
+
+    def clean_item_is_permanent(self):
+        value = int(self.cleaned_data['item_is_permanent'])
+        if value == self.IS_PERMANENT_YES:
+            return True
+        if value == self.IS_PERMANENT_NO:
+            return False
 
     def clean_person(self):
         if not int(self.cleaned_data['person']):
