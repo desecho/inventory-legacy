@@ -1,18 +1,17 @@
-#Inventory
+# Inventory
+The interface is in Russian.
 
-The web application on Python2/Django/jQuery to manage inventory. 
-It’s used by one of the local ISP companies in Russia. The interface is in Russian.
+# Additional information
 You can create boxes of type 5 and 6 by using administration panel.
 
-##Required packages
-
+## Required packages
 * [Python v2.6.5+](http://www.python.org)
 * [Django v1.5](http://djangoproject.com)
 * [django-annoying v0.7.7+](https://github.com/skorokithakis/django-annoying)
 * [django-bootstrap-toolkit v2.8.0+](https://github.com/dyve/django-bootstrap-toolkit)
 * [PyICU 1.5](https://pypi.python.org/pypi/PyICU)
 
-##Used Javascript libraries
+## Used JavaScript libraries
 * [Bootstrap v2.3.1](http://twitter.github.com/bootstrap/)
 * [jQuery v1.9.1](http://jquery.com/)
 * [jQuery UI v1.10.2](http://jqueryui.com/)
@@ -24,7 +23,7 @@ You can create boxes of type 5 and 6 by using administration panel.
 * [jQuery plugin: Validation v1.11.0](http://bassistance.de/jquery-plugins/jquery-plugin-validation/)
 * [Datejs](http://www.datejs.com/)
 
-##Installation instructions
+## Installation instructions
 
 * Insert your database settings in settings.py
 
